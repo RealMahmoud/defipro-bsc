@@ -3,23 +3,13 @@
     <div class="row align-items-center justify-content-lg-between">
       <div class="col-lg-6">
         <div class="copyright text-center text-lg-left text-muted">
-          © {{year}} <a href="https://www.creative-tim.com" class="font-weight-bold ml-1" target="_blank">Creative Tim</a> &
-          <a href="https://www.binarcode.com" class="font-weight-bold ml-1" target="_blank">Binar Code</a>
+          © {{year}} <a href="https://abdelhamidbakhta.github.io/" class="font-weight-bold ml-1" target="_blank">Abdelhamid Bakhta</a>
         </div>
       </div>
       <div class="col-lg-6">
         <ul class="nav nav-footer justify-content-center justify-content-lg-end">
           <li class="nav-item">
-            <a href="https://www.creative-tim.com" class="nav-link" target="_blank">Creative Tim</a>
-          </li>
-          <li class="nav-item">
-            <a href="https://www.creative-tim.com/presentation" class="nav-link" target="_blank">About Us</a>
-          </li>
-          <li class="nav-item">
-            <a href="https://www.creative-tim.com/blog" class="nav-link" target="_blank">Blog</a>
-          </li>
-          <li class="nav-item">
-            <a href="https://www.creative-tim.com/license" class="nav-link" target="_blank">License</a>
+            <a href="https://github.com/thefutureisnow-hackathon/binance-meets-defi-dashboard" class="nav-link" target="_blank">Source Code</a>
           </li>
         </ul>
       </div>

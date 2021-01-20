@@ -20,6 +20,7 @@ import App from './App.vue'
 import router from './router'
 import './registerServiceWorker'
 import ArgonDashboard from './plugins/argon-dashboard'
+import './plugins/font-awesome';
 
 Vue.config.productionTip = false
 
