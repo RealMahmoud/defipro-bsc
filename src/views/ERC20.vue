@@ -55,7 +55,7 @@
     </div>
     <modal :show.sync="modals.modalTrackNew"
            body-classes="p-0"
-           modal-classes="modal-dialog-centered modal-sm">
+           modal-classes="modal-dialog-centered modal-xl">
       <card type="secondary" shadow
             header-classes="bg-white pb-5"
             body-classes="px-lg-5 py-lg-5"
@@ -65,35 +65,28 @@
             <small>Register ERC-20 token</small>
           </div>
           <form role="form">
-            <!--base-input alternative
-                        class="mb-3"
-                        v-model="form.trackNew.symbol"
-                        placeholder="Symbol"
-                        addon-left-icon="ni ni-tag">
-            </base-input>
-            <base-input alternative
-                        class="mb-3"
-                        v-model="form.trackNew.name"
-                        placeholder="Name"
-                        addon-left-icon="ni ni-tag">
-            </base-input-->
             <base-input alternative
                         class="mb-3"
                         v-model="form.trackNew.address"
                         placeholder="Address"
                         addon-left-icon="ni ni-atom">
             </base-input>
-            <div class="text-center">
+            <div class="col-md-12 mt-2 mb-2" v-if="form.trackNew.name !== null">
+              <stats-card :title="form.trackNew.symbol"
+                          type="gradient-blue"
+                          :sub-title="form.trackNew.name"
+                          icon="ni ni-money-coins"
+                          class="mb-4 mb-xl-0"
+              >
+                <template slot="footer">
+                  <span class="text-success mr-2"><i class="fa fa-coins"></i> {{ form.trackNew.supply }}</span>
+                </template>
+              </stats-card>
+            </div>
+            <div class="text-center mt-2">
               <base-button @click="loadErc20Info" type="info" class="mr-2">Load</base-button>
               <base-button @click="trackNewToken" type="primary">Track</base-button>
             </div>
-            <!--base-input alternative
-                        class="mb-3"
-                        v-model="form.trackNew.supply"
-                        placeholder="Supply"
-                        addon-left-icon="ni ni-money-coins">
-            </base-input-->
-
           </form>
         </template>
       </card>
@@ -119,7 +112,7 @@ export default {
           supply: '',
         },
         trackNew: {
-          name: '',
+          name: null,
           address: '',
           symbol: '',
           supply: '',
@@ -129,7 +122,6 @@ export default {
   },
   methods: {
     async trackNewToken() {
-      console.log(this.data.erc20Store)
       registerERC20(
           this.data.erc20Store,
           this.form.trackNew.symbol,
@@ -139,7 +131,7 @@ export default {
       )
       this.data.erc20Store = reloadStore()
       this.form.trackNew = {
-        name: '',
+        name:  null,
         address: '',
         symbol: '',
         supply: '',
@@ -151,6 +143,12 @@ export default {
       const erc20Instance = this.smartContractManager.getErcInstanceFromAddress(window.ethereum.selectedAddress, this.form.trackNew.address)
       const erc20Info = await this.smartContractManager.getErc20Info(erc20Instance)
       console.log(erc20Info)
+      this.form.trackNew = {
+        name: erc20Info.name,
+        address: this.form.trackNew.address,
+        symbol: erc20Info.symbol,
+        supply: erc20Info.totalSupply,
+      }
     },
     deploy(evt) {
       try {
