@@ -39,7 +39,7 @@ const store = new Vuex.Store({
       erc20Contract: initERC20(),
       erc20Store: erc20Store,
     },
-    smartContractManager: new SmartContractManager(),
+    smartContractManager: null,
   },
   mutations: {}
 });
@@ -57,6 +57,7 @@ function initWeb3Environment(state) {
   const ethEnabled = () => {
     if (window.ethereum) {
       state.web3 = new Web3(window.ethereum)
+      state.smartContractManager = new SmartContractManager(state.web3)
       window.ethereum.enable();
       return true;
     }

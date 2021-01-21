@@ -65,7 +65,7 @@
             <small>Register ERC-20 token</small>
           </div>
           <form role="form">
-            <base-input alternative
+            <!--base-input alternative
                         class="mb-3"
                         v-model="form.trackNew.symbol"
                         placeholder="Symbol"
@@ -76,22 +76,24 @@
                         v-model="form.trackNew.name"
                         placeholder="Name"
                         addon-left-icon="ni ni-tag">
-            </base-input>
+            </base-input-->
             <base-input alternative
                         class="mb-3"
                         v-model="form.trackNew.address"
                         placeholder="Address"
                         addon-left-icon="ni ni-atom">
             </base-input>
-            <base-input alternative
+            <div class="text-center">
+              <base-button @click="loadErc20Info" type="info" class="mr-2">Load</base-button>
+              <base-button @click="trackNewToken" type="primary">Track</base-button>
+            </div>
+            <!--base-input alternative
                         class="mb-3"
                         v-model="form.trackNew.supply"
                         placeholder="Supply"
                         addon-left-icon="ni ni-money-coins">
-            </base-input>
-            <div class="text-center">
-              <base-button @click="trackNewToken">Track</base-button>
-            </div>
+            </base-input-->
+
           </form>
         </template>
       </card>
@@ -144,6 +146,11 @@ export default {
       }
       this.modals.modalTrackNew = false
       await this.initData()
+    },
+    async loadErc20Info(){
+      const erc20Instance = this.smartContractManager.getErcInstanceFromAddress(window.ethereum.selectedAddress, this.form.trackNew.address)
+      const erc20Info = await this.smartContractManager.getErc20Info(erc20Instance)
+      console.log(erc20Info)
     },
     deploy(evt) {
       try {
