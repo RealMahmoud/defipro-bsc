@@ -24,8 +24,20 @@ function registerERC20(store, symbol, name, supply, address) {
     writeToStorage(STORAGE_KEYS.erc20Instances, store)
 }
 
+function unRegisterERC20(store, symbol) {
+    const arr = []
+    store.erc20TrackedTokens.forEach(token => {
+        if(token.symbol !== symbol){
+            arr.push(token)
+        }
+    })
+    store.erc20TrackedTokens = arr
+    writeToStorage(STORAGE_KEYS.erc20Instances, store)
+}
+
 export {
     erc20Store,
     registerERC20,
+    unRegisterERC20,
     reloadStore
 }

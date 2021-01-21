@@ -37,16 +37,34 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-6 mt-2" v-for="token in trackedTokens" :key="token.symbol">
-                <stats-card :title="token.symbol"
+              <card class="card-stats" :show-footer-line="true">
+                <div class="row">
+                  <div class="col">
+                    <slot>
+                      <h5 class="card-title text-uppercase text-muted mb-0" >{{token.symbol}}</h5>
+                      <span class="h2 font-weight-bold mb-0" >{{token.name}}</span>
+                    </slot>
+                  </div>
+                  <div class="col-auto">
+                      <div class="icon icon-shape">
+                        <a @click="unTrackToken(token)"><span  class="text-danger mr-2"><i class="fa fa-trash"></i> </span></a>
+                      </div>
+                  </div>
+                </div>
+
+                <p class="mt-3 mb-0 text-sm">
+                  <span class="text-success mr-2"><i class="fa fa-coins"></i> {{ token.supply }}</span>
+                </p>
+              </card>
+                <!--stats-card :title="token.symbol"
                             type="gradient-blue"
                             :sub-title="token.name"
-                            icon="ni ni-money-coins"
                             class="mb-4 mb-xl-0"
                 >
                   <template slot="footer">
                     <span class="text-success mr-2"><i class="fa fa-coins"></i> {{ token.supply }}</span>
                   </template>
-                </stats-card>
+                </stats-card-->
             </div>
           </div>
         </div>
@@ -95,7 +113,7 @@
 </template>
 <script>
 import {mapState} from "vuex";
-import {registerERC20, reloadStore} from "@/erc20-store";
+import {registerERC20, reloadStore, unRegisterERC20} from "@/erc20-store";
 
 export default {
   components: {},
@@ -198,7 +216,15 @@ export default {
       for (const token of this.data.erc20Store.erc20TrackedTokens) {
         this.trackedTokens.push(token)
       }
-    }
+    },
+    async unTrackToken(token){
+      unRegisterERC20(
+          this.data.erc20Store,
+          token.symbol,
+      )
+      await this.initData()
+
+    },
   },
   computed: {
     ...mapState([
