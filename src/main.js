@@ -24,6 +24,7 @@ import ArgonDashboard from './plugins/argon-dashboard'
 import './plugins/font-awesome'
 import Web3 from "web3"
 import {erc20Store} from "@/erc20-store";
+import SmartContractManager from "@/services/SmartContractManager";
 Vue.config.productionTip = false
 Vue.use(ArgonDashboard)
 Vue.use(Vuex)
@@ -36,6 +37,7 @@ const store = new Vuex.Store({
     },
     erc20Contract: initERC20(),
     erc20Store: erc20Store,
+    smartContractManager: new SmartContractManager(),
   },
   mutations: {}
 });

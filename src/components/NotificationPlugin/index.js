@@ -51,10 +51,21 @@ const NotificationsPlugin = {
       methods: {
         notify(notification) {
           this.notificationStore.notify(notification);
+        },
+        notifyMessage(type, message, verticalAlign = 'top', horizontalAlign = 'center') {
+          this.notify({
+            message: message,
+            icon: "ni ni-bell-55",
+            horizontalAlign: horizontalAlign,
+            verticalAlign: verticalAlign,
+            type: type,
+            timeout: 0
+          });
         }
       }
     });
     Vue.prototype.$notify = app.notify;
+    Vue.prototype.$notifyMessage = app.notifyMessage;
     Vue.prototype.$notifications = app.notificationStore;
     Vue.component('Notifications', Notifications);
     if (options) {

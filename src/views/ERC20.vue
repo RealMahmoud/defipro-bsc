@@ -2,7 +2,7 @@
   <div>
     <base-header type="gradient-success" class="pb-6 pb-8 pt-5 pt-md-8">
       <div class="row">
-        <div class="col-md-4" >
+        <div class="col-md-4">
           <base-input label="Symbol" v-model="form.deploy.symbol"></base-input>
         </div>
         <div class="col-md-4">
@@ -19,7 +19,6 @@
       </div>
     </base-header>
 
-    <!--Charts-->
     <div class="container-fluid mt--7">
 
     </div>
@@ -43,13 +42,45 @@ export default {
     }
   },
   methods: {
-    deploy(){
-      console.log(this.form)
+    deploy(evt) {
+      try {
+        evt.preventDefault();
+        const symbol = this.form.deploy.symbol
+        const name = this.form.deploy.name
+        const supply = this.form.deploy.supply
+        const erc20Contract = this.$store.state.erc20Contract
+        const sender = window.ethereum.selectedAddress
+        this.smartContractManager.deployContract(
+            erc20Contract.contract, sender, erc20Contract.code,
+            [name, symbol, supply],
+            this.deploySendTransactionCallback,
+            this.deployReceiptCallback,
+            this.onDeployed
+        )
+      } catch (e) {
+        this.$notifyMessage('danger', 'Deployment failed')
+        console.error(e)
+      }
+    },
+    deploySendTransactionCallback(err, transactionHash){
+      if (err) {
+        console.error(err);
+        this.$notifyMessage('danger', 'Deployment failed')
+      } else {
+        console.log('transaction hash: ', transactionHash);
+      }
+    },
+    deployReceiptCallback(receipt){
+      console.log('contract deployed at: ', receipt.contractAddress);
+    },
+    onDeployed(instance){
+      console.log(instance)
     }
   },
   computed: {
     ...mapState([
       'erc20Store',
+      'smartContractManager'
     ])
   },
   mounted() {
