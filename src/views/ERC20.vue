@@ -35,15 +35,8 @@
         </div>
 
         <div class="card-body">
-          <!--div class="row">
-            <div class="col-md-4" v-for="token in trackedTokens" :key="token.symbol">
-              <h2 class="text-primary">{{token.symbol}}</h2>
-              <h2>{{token.name}}</h2>
-              <h2>{{token.supply}}</h2>
-            </div>
-          </div-->
           <div class="row">
-            <div class="col-md-6" v-for="token in trackedTokens" :key="token.symbol">
+            <div class="col-md-6 mt-2" v-for="token in trackedTokens" :key="token.symbol">
                 <stats-card :title="token.symbol"
                             type="gradient-blue"
                             :sub-title="token.name"
@@ -149,6 +142,8 @@ export default {
         symbol: '',
         supply: '',
       }
+      this.modals.modalTrackNew = false
+      await this.initData()
     },
     deploy(evt) {
       try {
@@ -156,7 +151,7 @@ export default {
         const symbol = this.form.deploy.symbol
         const name = this.form.deploy.name
         const supply = this.form.deploy.supply
-        const erc20Contract = this.$store.state.erc20Contract
+        const erc20Contract = this.data.erc20Contract
         const sender = window.ethereum.selectedAddress
         this.smartContractManager.deployContract(
             erc20Contract.contract, sender, erc20Contract.code,
@@ -178,24 +173,27 @@ export default {
         console.log('transaction hash: ', transactionHash);
       }
     },
-    deployReceiptCallback(receipt) {
+    async deployReceiptCallback(receipt) {
       console.log('contract deployed at: ', receipt.contractAddress);
       registerERC20(
-          this.erc20Store,
+          this.data.erc20Store,
           this.form.deploy.symbol,
           this.form.deploy.name,
           this.form.deploy.supply,
           receipt.contractAddress
       )
-      this.data.erc20Store = reloadStore()
-      this.$nextTick(() => {
-        this.initData()
-      })
+      await this.initData()
     },
     onDeployed(instance) {
       console.log(instance)
 
     },
+    async initData(){
+      this.trackedTokens = []
+      for (const token of this.data.erc20Store.erc20TrackedTokens) {
+        this.trackedTokens.push(token)
+      }
+    }
   },
   computed: {
     ...mapState([
@@ -203,10 +201,8 @@ export default {
       'smartContractManager'
     ])
   },
-  mounted() {
-    for (const token of this.data.erc20Store.erc20TrackedTokens) {
-      this.trackedTokens.push(token)
-    }
+  async mounted() {
+   await this.initData()
   }
 };
 </script>
