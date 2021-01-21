@@ -21,6 +21,11 @@ export default new Router({
           component: () => import(/* webpackChunkName: "demo" */ './views/Dashboard.vue')
         },
         {
+          path: '/erc20',
+          name: 'erc20',
+          component: () => import(/* webpackChunkName: "demo" */ './views/ERC20.vue')
+        },
+        {
           path: '/lending',
           name: 'lending',
           component: () => import(/* webpackChunkName: "demo" */ './views/Lending.vue')
