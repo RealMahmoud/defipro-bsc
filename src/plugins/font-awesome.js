@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import {library} from '@fortawesome/fontawesome-svg-core';
-import {faCopy, faDownload, faInfoCircle, faCalendarAlt, faThumbsUp, faThumbsDown, faCreditCard} from '@fortawesome/free-solid-svg-icons';
+import {faCopy, faDownload, faInfoCircle, faCalendarAlt, faThumbsUp, faThumbsDown, faCreditCard, faCoins} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
 library.add(
@@ -10,7 +10,8 @@ library.add(
     faCalendarAlt,
     faThumbsUp,
     faThumbsDown,
-    faCreditCard
+    faCreditCard,
+    faCoins
 );
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);

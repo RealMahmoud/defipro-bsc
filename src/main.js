@@ -35,8 +35,10 @@ const store = new Vuex.Store({
     web3: null,
     settings: {
     },
-    erc20Contract: initERC20(),
-    erc20Store: erc20Store,
+    data: {
+      erc20Contract: initERC20(),
+      erc20Store: erc20Store,
+    },
     smartContractManager: new SmartContractManager(),
   },
   mutations: {}
@@ -78,5 +80,5 @@ function initERC20() {
 }
 
 function loadERCContracts(state) {
-  state.erc20Contract.contract = new state.web3.eth.Contract(state.erc20Contract.abi);
+  state.data.erc20Contract.contract = new state.web3.eth.Contract(state.data.erc20Contract.abi);
 }

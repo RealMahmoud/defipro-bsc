@@ -9,7 +9,11 @@
       <div class="col-lg-6">
         <ul class="nav nav-footer justify-content-center justify-content-lg-end">
           <li class="nav-item">
-            <a href="https://github.com/thefutureisnow-hackathon/binance-meets-defi-dashboard" class="nav-link" target="_blank">Source Code</a>
+            <!--a href="https://github.com/thefutureisnow-hackathon/binance-meets-defi-dashboard" class="nav-link" target="_blank">Source Code</a-->
+            <base-button type="neutral" @click="github">
+              <img slot="icon" src="https://demos.creative-tim.com/argon-design-system/assets/img/icons/common/github.svg">
+              Github
+            </base-button>
           </li>
         </ul>
       </div>
@@ -22,6 +26,11 @@ export default {
     return {
       year: new Date().getFullYear()
     };
+  },
+  methods: {
+    github(){
+      window.open('https://github.com/thefutureisnow-hackathon/binance-meets-defi-dashboard')
+    },
   }
 };
 </script>
