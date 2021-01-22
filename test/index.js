@@ -12,7 +12,12 @@ const matchingMarketContract = new web3.eth.Contract(contractAbi, contractAddres
 describe('Init', function () {
     describe('#start()', function () {
         it('should start normally', async function () {
-            const name = await matchingMarketContract.methods.name().call({from: account.address});
+            const s = BigInt(5)
+            const multiplier = BigInt(10**18)
+            console.log(s.toString(10))
+            console.log(multiplier.toString(10))
+            console.log((s*multiplier).toString(10))
+            /*const name = await matchingMarketContract.methods.name().call({from: account.address});
             console.log(name);
             matchingMarketContract.methods.make(
                 '0x619A83c9368aDa9fFb98c3F14b662724dD19E943',
@@ -22,7 +27,7 @@ describe('Init', function () {
             )
                 .send({from: '0xfe3b557e8fb62b89f4916b721be55ceb828dbd73'})
                 .on('receipt', console.log)
-                .on('error', console.error);
+                .on('error', console.error);*/
         });
     });
 });

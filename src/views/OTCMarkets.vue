@@ -31,8 +31,8 @@
           </div>
           <div class="col text-right">
             <base-button type="primary" size="sm" @click="modals.modalTrackNew = true">Track New OTC</base-button>
-            <base-button type="primary" size="sm">Buy</base-button>
-            <base-button type="primary" size="sm">Sell</base-button>
+            <base-button type="primary" size="sm" @click="goToTrading" >Buy</base-button>
+            <base-button type="primary" size="sm" @click="goToTrading" >Sell</base-button>
           </div>
         </div>
 
@@ -174,6 +174,9 @@ export default {
       for (const market of this.data.otcMarketStore.markets) {
         this.trackedMarkets.push(market)
       }
+    },
+    goToTrading(){
+      this.$router.push('otc-trading')
     },
     async trackNewOtc() {
       registerOtcMarket(

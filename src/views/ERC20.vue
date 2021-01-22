@@ -128,6 +128,7 @@
 <script>
 import {mapState} from "vuex";
 import {registerERC20, reloadStore, unRegisterERC20} from "@/erc20-store";
+const multiplier = BigInt(10**18)
 
 export default {
   components: {},
@@ -142,13 +143,13 @@ export default {
         deploy: {
           name: '',
           symbol: '',
-          supply: '',
+          supply: 0,
         },
         trackNew: {
           name: null,
           address: '',
           symbol: '',
-          supply: '',
+          supply: 0,
         }
       },
       tokenToUnRegister: null,
@@ -168,7 +169,7 @@ export default {
         name: null,
         address: '',
         symbol: '',
-        supply: '',
+        supply: 0,
       }
       this.modals.modalTrackNew = false
       await this.initData()
@@ -189,13 +190,13 @@ export default {
         evt.preventDefault();
         const symbol = this.form.deploy.symbol
         const name = this.form.deploy.name
-        const supply = this.form.deploy.supply * 10^18
-        console.log(supply)
+        const supply = BigInt(this.form.deploy.supply)*multiplier
+        console.log('supply: ', supply)
         const erc20Contract = this.data.erc20Contract
         const sender = window.ethereum.selectedAddress
         this.smartContractManager.deployContract(
             erc20Contract.contract, sender, erc20Contract.code,
-            [name, symbol, supply ],
+            [name, symbol, supply.toString(10) ],
             this.deploySendTransactionCallback,
             this.deployReceiptCallback,
             this.onDeployed
