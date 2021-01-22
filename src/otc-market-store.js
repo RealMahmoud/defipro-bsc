@@ -8,10 +8,11 @@ function reloadOtcMarketStore() {
     return getFromStorageOrDefault(STORAGE_KEYS.otcMarkets, {markets: []})
 }
 
-function registerOtcMarket(store, closeTime) {
+function registerOtcMarket(store, name, closeTime, address) {
     store.markets.push({
         name: name,
-        symbol: closeTime,
+        closeTime: closeTime,
+        address: address,
     })
     writeToStorage(STORAGE_KEYS.otcMarkets, store)
 }

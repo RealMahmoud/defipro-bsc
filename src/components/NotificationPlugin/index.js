@@ -59,7 +59,7 @@ const NotificationsPlugin = {
             horizontalAlign: horizontalAlign,
             verticalAlign: verticalAlign,
             type: type,
-            timeout: 0
+            timeout: 5000
           });
         }
       }
