@@ -25,7 +25,7 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-2">
-                Market
+              Market
             </div>
             <div class="col-md-8">
               <b-form-select v-model="selectedMarket" :options="trackedMarkets"></b-form-select>
@@ -55,13 +55,47 @@
           </div>
           <div class="row">
             <div class="col-md-2">
-              <base-button block @click="makeOffer" type="primary" icon="ni ni-send">Make Offer</base-button>
+              <base-button block @click="prepareMakeOffer" type="primary" icon="ni ni-send">Make Offer</base-button>
             </div>
           </div>
         </div>
 
       </div>
     </div>
+    <modal :show.sync="modals.makeOffer"
+           gradient="warning"
+           modal-classes="modal-warning modal-dialog-centered">
+      <h6 slot="header" class="modal-title" id="modal-title-notification">Your attention is required</h6>
+
+      <div class="py-3 text-center" v-if="selectedPayToken !== null && selectedBuyToken !== null">
+        <i class="ni ni-bell-55 ni-3x"></i>
+        <h4 class="heading mt-4">Trading Warning</h4>
+        <p class="lead">This action may result in financial loss.</p>
+        <p>
+          You are about to trade
+        </p>
+        <p>
+          <span class="text-lg font-weight-bold">{{ payAmount }} {{ tokenMap.get(selectedPayToken).symbol }} </span>
+        </p>
+        <p>
+          for
+        </p>
+        <p>
+          <span class="text-lg font-weight-bold">{{ buyAmount }} {{ tokenMap.get(selectedBuyToken).symbol }} </span>
+        </p>
+      </div>
+
+      <template slot="footer">
+        <base-button type="white" @click="makeOffer">I am aware of the risk and I want to proceed.</base-button>
+        <base-button type="link"
+                     text-color="white"
+                     class="ml-auto"
+                     @click="cancelMakeOffer">
+          Cancel
+        </base-button>
+      </template>
+    </modal>
+
   </div>
 </template>
 <script>
@@ -71,7 +105,10 @@ export default {
   components: {},
   data() {
     return {
-      modals: {},
+      modals: {
+        makeOffer: false,
+      },
+      tokenMap: new Map,
       trackedTokens: [],
       trackedMarkets: [],
       selectedMarket: null,
@@ -83,31 +120,54 @@ export default {
     }
   },
   methods: {
-    async makeOffer(){
-      try{
+    cancelMakeOffer() {
+      this.modals.makeOffer = false
+    },
+    prepareMakeOffer() {
+      if (this.selectedBuyToken === null || this.selectedPayToken === null ||
+          this.selectedBuyToken === this.selectedPayToken) {
+        this.$notifyMessage('danger', 'You must select valid trading pair.')
+      } else {
+        this.modals.makeOffer = true
+      }
+    },
+    async makeOffer() {
+      try {
         console.log('Pay Token: ', this.selectedPayToken)
         console.log('Pay Amount: ', this.payAmount)
         console.log('Buy Token: ', this.selectedBuyToken)
         console.log('Buy Amount: ', this.buyAmount)
-      }catch (e) {
+      } catch (e) {
         this.$notifyMessage('danger', 'Trade failed')
         console.error(e)
       }
+      this.modals.makeOffer = false
     },
     async initData() {
       this.trackedTokens = []
       for (const token of this.data.erc20Store.erc20TrackedTokens) {
-        this.trackedTokens.push({
+        const tokenData = {
           name: token.name,
           symbol: token.symbol,
           address: token.address,
           supply: token.supply,
           value: token.address,
           text: token.name,
-        })
+        }
+        this.tokenMap.set(token.address, tokenData)
+        this.trackedTokens.push(tokenData)
+        if (this.selectedPayToken === null) {
+          this.selectedPayToken = token.address
+        }
+        if (this.selectedBuyToken === null) {
+          this.selectedBuyToken = token.address
+        }
       }
       this.trackedMarkets = []
       for (const market of this.data.otcMarketStore.markets) {
+        if (this.selectedMarket === null) {
+          this.selectedMarket = market.address
+        }
         this.trackedMarkets.push({
           name: market.name,
           address: market.address,
