@@ -10,6 +10,8 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
+    "@bit/joshk.vue-spinners-css.facebook-loader": "^1.1.5",
+    "@bit/joshk.vue-spinners-css.hourglass-loader": "^1.1.5",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/vue-fontawesome": "^2.0.0",
@@ -26,6 +28,7 @@
     "vue-clipboard2": "0.3.1",
     "vue-flatpickr-component": "8.1.5",
     "vue-router": "3.3.4",
+    "vue-spinners-css": "^1.1.5",
     "vue2-transitions": "0.3.0",
     "vuejs-datetimepicker": "^1.1.13",
     "vuex": "^3.5.1",

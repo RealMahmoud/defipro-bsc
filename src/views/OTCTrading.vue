@@ -2,8 +2,8 @@
   <div>
     <base-header type="gradient-success" class="pb-6 pb-8 pt-5 pt-md-8">
 
-      <p class="lead">
-        On-Chain OTC market for ERC20-compatible tokens
+      <p class="lead text-white">
+        Trade using On-Chain OTC market matching engine
       </p>
     </base-header>
 
@@ -98,17 +98,30 @@
         </base-button>
       </template>
     </modal>
-
+    <modal :show.sync="loading" gradient="light">
+      <template slot="header">
+        <h5 class="modal-title">Please wait...</h5>
+      </template>
+      <div>
+        <div class="text-center">
+          <FacebookLoader :loading="loading" :color="'#283593'" :size="200"/>
+        </div>
+      </div>
+    </modal>
   </div>
 </template>
 <script>
 import {mapState} from "vuex";
 import {toTokens} from "@/services/eth-utils";
+import FacebookLoader from '@bit/joshk.vue-spinners-css.facebook-loader';
 
 export default {
-  components: {},
+  components: {
+    FacebookLoader,
+  },
   data() {
     return {
+      loading: false,
       modals: {
         makeOffer: false,
       },
@@ -136,6 +149,7 @@ export default {
       }
     },
     async increaseMarketAllowance() {
+      this.loading = true
       const sender = window.ethereum.selectedAddress
       const buyErc20Token = this.smartContractManager.getErcInstanceFromAddress(sender, this.selectedBuyToken)
       buyErc20Token.methods.increaseAllowance(
@@ -215,10 +229,12 @@ export default {
     genericReceiptCallback(receipt) {
       this.$notifyMessage('success', 'Transaction executed.')
       console.log(receipt)
+      this.loading = false
     },
     genericErrorCallback(error) {
       this.$notifyMessage('danger', 'Trade failed.')
       console.error(error)
+      this.loading = false
     },
   },
   computed: {

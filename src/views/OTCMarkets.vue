@@ -1,6 +1,9 @@
 <template>
   <div>
     <base-header type="gradient-success" class="pb-6 pb-8 pt-5 pt-md-8">
+      <p class="lead text-white">
+        On-Chain OTC market for ERC20-compatible tokens
+      </p>
       <div class="row">
         <div class="col-md-12">
           <base-input label="Name" v-model="form.deploy.name"></base-input>

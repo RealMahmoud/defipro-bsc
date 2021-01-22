@@ -1,6 +1,9 @@
 <template>
   <div>
     <base-header type="gradient-success" class="pb-6 pb-8 pt-5 pt-md-8">
+      <p class="lead text-white">
+        Deploy and manage ERC-20 tokens
+      </p>
       <div class="row">
         <div class="col-md-4">
           <base-input label="Symbol" v-model="form.deploy.symbol"></base-input>
@@ -123,6 +126,16 @@
         </base-button>
       </template>
     </modal>
+    <modal :show.sync="loading" gradient="light">
+      <template slot="header">
+        <h5 class="modal-title">Please wait...</h5>
+      </template>
+      <div>
+        <div class="text-center">
+          <FacebookLoader :loading="loading" :color="'#283593'" :size="200"/>
+        </div>
+      </div>
+    </modal>
   </div>
 </template>
 <script>
@@ -134,6 +147,7 @@ export default {
   components: {},
   data() {
     return {
+      loading: false,
       modals: {
         modalTrackNew: false,
         modalUnRegister: false,
@@ -187,6 +201,7 @@ export default {
     },
     deploy(evt) {
       try {
+        this.loading = true
         evt.preventDefault();
         const symbol = this.form.deploy.symbol
         const name = this.form.deploy.name
@@ -204,6 +219,7 @@ export default {
       } catch (e) {
         this.$notifyMessage('danger', 'Deployment failed')
         console.error(e)
+        this.loading = false
       }
     },
     deploySendTransactionCallback(err, transactionHash) {
@@ -223,11 +239,12 @@ export default {
           this.form.deploy.supply,
           receipt.contractAddress
       )
+      this.loading = false
       await this.initData()
     },
     onDeployed(instance) {
       console.log(instance)
-
+      this.loading = false
     },
     async initData() {
       this.trackedTokens = []
