@@ -189,12 +189,13 @@ export default {
         evt.preventDefault();
         const symbol = this.form.deploy.symbol
         const name = this.form.deploy.name
-        const supply = this.form.deploy.supply
+        const supply = this.form.deploy.supply * 10^18
+        console.log(supply)
         const erc20Contract = this.data.erc20Contract
         const sender = window.ethereum.selectedAddress
         this.smartContractManager.deployContract(
             erc20Contract.contract, sender, erc20Contract.code,
-            [name, symbol, supply],
+            [name, symbol, supply ],
             this.deploySendTransactionCallback,
             this.deployReceiptCallback,
             this.onDeployed
