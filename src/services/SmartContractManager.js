@@ -1,5 +1,5 @@
 const erc20Artifacts = require('../../contracts/ERC20');
-
+const matchingMarketArtifacts = require('../../contracts/MatchingMarket');
 
 export default class SmartContractManager {
     constructor(web3) {
@@ -24,6 +24,14 @@ export default class SmartContractManager {
         );
     }
 
+    getMatchingMarketInstanceFromAddress(sender, address){
+        return new this.web3.eth.Contract(
+            matchingMarketArtifacts.abi,
+            address,
+            {from: sender}
+        );
+    }
+
     async getErc20Info(instance){
         const name = await instance.methods.name().call();
         console.log('name: ', name)
@@ -34,5 +42,13 @@ export default class SmartContractManager {
             symbol: symbol,
             totalSupply: totalSupply,
         }
+    }
+
+    getMatchingMarketArtifacts(){
+        return matchingMarketArtifacts
+    }
+
+    newMatchingMarketContract(){
+        return new this.web3.eth.Contract(matchingMarketArtifacts.abi);
     }
 }
