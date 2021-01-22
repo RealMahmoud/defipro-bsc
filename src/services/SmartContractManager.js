@@ -48,7 +48,7 @@ export default class SmartContractManager {
         return matchingMarketArtifacts
     }
 
-    newMatchingMarketContract(){
-        return new this.web3.eth.Contract(matchingMarketArtifacts.abi);
+    newMatchingMarketContract(address = null){
+        return new this.web3.eth.Contract(matchingMarketArtifacts.abi, address);
     }
 }

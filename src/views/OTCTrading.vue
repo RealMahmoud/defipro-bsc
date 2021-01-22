@@ -137,10 +137,31 @@ export default {
         console.log('Pay Amount: ', this.payAmount)
         console.log('Buy Token: ', this.selectedBuyToken)
         console.log('Buy Amount: ', this.buyAmount)
+        const matchingMarket = this.smartContractManager.newMatchingMarketContract(this.selectedMarket)
+        const sender = window.ethereum.selectedAddress
+        matchingMarket.methods.make(
+            this.selectedPayToken,
+            this.selectedBuyToken,
+            this.payAmount,
+            this.buyAmount,
+        )
+            .send({from: sender})
+            .on('receipt', this.makeOfferReceiptCallback)
+            .on('error', this.makeOfferErrorCallback);
       } catch (e) {
         this.$notifyMessage('danger', 'Trade failed')
         console.error(e)
       }
+      this.modals.makeOffer = false
+    },
+    makeOfferReceiptCallback(receipt){
+      this.$notifyMessage('success', 'Offer submitted to the matching engine.')
+      console.log(receipt)
+      this.modals.makeOffer = false
+    },
+    makeOfferErrorCallback(error){
+      this.$notifyMessage('danger', 'Trade failed')
+      console.error(error)
       this.modals.makeOffer = false
     },
     async initData() {
