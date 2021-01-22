@@ -13,11 +13,9 @@
             path: '/dashboard'
           }"
         />
+        <sidebar-item :link="{name: 'OTC Market', icon: 'ni ni-money-coins text-orange', path: '/otc'}"/>
         <sidebar-item :link="{name: 'ERC20', icon: 'ni ni-atom text-blue', path: '/erc20'}"/>
         <sidebar-item :link="{name: 'Lending', icon: 'fa fa-credit-card text-pink', path: '/lending'}"/>
-        <sidebar-item :link="{name: 'Login', icon: 'ni ni-key-25 text-info', path: '/login'}"/>
-        <sidebar-item :link="{name: 'Register', icon: 'ni ni-circle-08 text-pink', path: '/register'}"/>
-
       </template>
     </side-bar>
     <div class="main-content" :data="sidebarBackground">

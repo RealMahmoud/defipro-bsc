@@ -41,14 +41,15 @@
                 <div class="row">
                   <div class="col">
                     <slot>
-                      <h5 class="card-title text-uppercase text-muted mb-0" >{{token.symbol}}</h5>
-                      <span class="h2 font-weight-bold mb-0" >{{token.name}}</span>
+                      <h5 class="card-title text-uppercase text-muted mb-0">{{ token.symbol }}</h5>
+                      <span class="h2 font-weight-bold mb-0">{{ token.name }}</span>
                     </slot>
                   </div>
                   <div class="col-auto">
-                      <div class="icon icon-shape">
-                        <a @click="unTrackToken(token)"><span  class="text-danger mr-2"><i class="fa fa-trash"></i> </span></a>
-                      </div>
+                    <div class="icon icon-shape">
+                      <a @click="prepareUnRegister(token)"><span class="text-danger mr-2"><i
+                          class="fa fa-trash"></i> </span></a>
+                    </div>
                   </div>
                 </div>
 
@@ -56,15 +57,6 @@
                   <span class="text-success mr-2"><i class="fa fa-coins"></i> {{ token.supply }}</span>
                 </p>
               </card>
-                <!--stats-card :title="token.symbol"
-                            type="gradient-blue"
-                            :sub-title="token.name"
-                            class="mb-4 mb-xl-0"
-                >
-                  <template slot="footer">
-                    <span class="text-success mr-2"><i class="fa fa-coins"></i> {{ token.supply }}</span>
-                  </template>
-                </stats-card-->
             </div>
           </div>
         </div>
@@ -109,6 +101,28 @@
         </template>
       </card>
     </modal>
+
+    <modal :show.sync="modals.modalUnRegister"
+           gradient="warning"
+           modal-classes="modal-warning modal-dialog-centered">
+      <h6 slot="header" class="modal-title" id="modal-title-notification">Your attention is required</h6>
+
+      <div class="py-3 text-center">
+        <i class="ni ni-bell-55 ni-3x"></i>
+        <h4 class="heading mt-4">Information</h4>
+        <p>This action will not affect the ERC-20 contract. It will only remove it form your personal list of tracked tokens.</p>
+      </div>
+
+      <template slot="footer">
+        <base-button type="white" @click="confirmUnRegister">Ok, remove it</base-button>
+        <base-button type="link"
+                     text-color="white"
+                     class="ml-auto"
+                     @click="cancelUnRegister">
+          Cancel
+        </base-button>
+      </template>
+    </modal>
   </div>
 </template>
 <script>
@@ -121,6 +135,7 @@ export default {
     return {
       modals: {
         modalTrackNew: false,
+        modalUnRegister: false,
       },
       trackedTokens: [],
       form: {
@@ -135,7 +150,8 @@ export default {
           symbol: '',
           supply: '',
         }
-      }
+      },
+      tokenToUnRegister: null,
     }
   },
   methods: {
@@ -149,7 +165,7 @@ export default {
       )
       this.data.erc20Store = reloadStore()
       this.form.trackNew = {
-        name:  null,
+        name: null,
         address: '',
         symbol: '',
         supply: '',
@@ -157,7 +173,7 @@ export default {
       this.modals.modalTrackNew = false
       await this.initData()
     },
-    async loadErc20Info(){
+    async loadErc20Info() {
       const erc20Instance = this.smartContractManager.getErcInstanceFromAddress(window.ethereum.selectedAddress, this.form.trackNew.address)
       const erc20Info = await this.smartContractManager.getErc20Info(erc20Instance)
       console.log(erc20Info)
@@ -211,20 +227,34 @@ export default {
       console.log(instance)
 
     },
-    async initData(){
+    async initData() {
       this.trackedTokens = []
       for (const token of this.data.erc20Store.erc20TrackedTokens) {
         this.trackedTokens.push(token)
       }
     },
-    async unTrackToken(token){
+    async unTrackToken(token) {
       unRegisterERC20(
           this.data.erc20Store,
           token.symbol,
       )
       await this.initData()
-
     },
+    async prepareUnRegister(token) {
+      this.tokenToUnRegister = token
+      this.modals.modalUnRegister = true
+    },
+    async confirmUnRegister() {
+      if (this.tokenToUnRegister !== null) {
+        await this.unTrackToken(this.tokenToUnRegister)
+        this.tokenToUnRegister = null
+        this.modals.modalUnRegister = false
+      }
+    },
+    async cancelUnRegister() {
+      this.tokenToUnRegister = null
+      this.modals.modalUnRegister = false
+    }
   },
   computed: {
     ...mapState([
@@ -233,7 +263,7 @@ export default {
     ])
   },
   async mounted() {
-   await this.initData()
+    await this.initData()
   }
 };
 </script>
