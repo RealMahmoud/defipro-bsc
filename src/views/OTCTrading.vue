@@ -55,6 +55,9 @@
           </div>
           <div class="row">
             <div class="col-md-2">
+              <base-button block @click="increaseMarketAllowance" type="primary">Allow Trade</base-button>
+            </div>
+            <div class="col-md-2">
               <base-button block @click="prepareMakeOffer" type="primary" icon="ni ni-send">Make Offer</base-button>
             </div>
           </div>
@@ -100,6 +103,7 @@
 </template>
 <script>
 import {mapState} from "vuex";
+import {toTokens} from "@/services/eth-utils";
 
 export default {
   components: {},
@@ -131,6 +135,16 @@ export default {
         this.modals.makeOffer = true
       }
     },
+    async increaseMarketAllowance() {
+      const sender = window.ethereum.selectedAddress
+      const buyErc20Token = this.smartContractManager.getErcInstanceFromAddress(sender, this.selectedBuyToken)
+      buyErc20Token.methods.increaseAllowance(
+          this.selectedMarket,
+          toTokens(this.buyAmount),
+      ).send({from: sender})
+          .on('receipt', this.genericReceiptCallback)
+          .on('error', this.genericErrorCallback);
+    },
     async makeOffer() {
       try {
         console.log('Pay Token: ', this.selectedPayToken)
@@ -142,8 +156,8 @@ export default {
         matchingMarket.methods.make(
             this.selectedPayToken,
             this.selectedBuyToken,
-            this.payAmount,
-            this.buyAmount,
+            toTokens(this.payAmount),
+            toTokens(this.buyAmount),
         )
             .send({from: sender})
             .on('receipt', this.makeOfferReceiptCallback)
@@ -154,12 +168,12 @@ export default {
       }
       this.modals.makeOffer = false
     },
-    makeOfferReceiptCallback(receipt){
+    makeOfferReceiptCallback(receipt) {
       this.$notifyMessage('success', 'Offer submitted to the matching engine.')
       console.log(receipt)
       this.modals.makeOffer = false
     },
-    makeOfferErrorCallback(error){
+    makeOfferErrorCallback(error) {
       this.$notifyMessage('danger', 'Trade failed')
       console.error(error)
       this.modals.makeOffer = false
@@ -197,6 +211,14 @@ export default {
           text: market.name,
         })
       }
+    },
+    genericReceiptCallback(receipt) {
+      this.$notifyMessage('success', 'Transaction executed.')
+      console.log(receipt)
+    },
+    genericErrorCallback(error) {
+      this.$notifyMessage('danger', 'Trade failed.')
+      console.error(error)
     },
   },
   computed: {

@@ -128,7 +128,7 @@
 <script>
 import {mapState} from "vuex";
 import {registerERC20, reloadStore, unRegisterERC20} from "@/erc20-store";
-const multiplier = BigInt(10**18)
+import {toTokens} from "@/services/eth-utils";
 
 export default {
   components: {},
@@ -190,13 +190,13 @@ export default {
         evt.preventDefault();
         const symbol = this.form.deploy.symbol
         const name = this.form.deploy.name
-        const supply = BigInt(this.form.deploy.supply)*multiplier
+        const supply = toTokens(this.form.deploy.supply)
         console.log('supply: ', supply)
         const erc20Contract = this.data.erc20Contract
         const sender = window.ethereum.selectedAddress
         this.smartContractManager.deployContract(
             erc20Contract.contract, sender, erc20Contract.code,
-            [name, symbol, supply.toString(10) ],
+            [name, symbol, supply ],
             this.deploySendTransactionCallback,
             this.deployReceiptCallback,
             this.onDeployed
