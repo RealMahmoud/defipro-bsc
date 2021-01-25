@@ -151,10 +151,10 @@ export default {
     async increaseMarketAllowance() {
       this.loading = true
       const sender = window.ethereum.selectedAddress
-      const buyErc20Token = this.smartContractManager.getErcInstanceFromAddress(sender, this.selectedBuyToken)
-      buyErc20Token.methods.increaseAllowance(
+      const payErc20Token = this.smartContractManager.getErcInstanceFromAddress(sender, this.selectedPayToken)
+      payErc20Token.methods.increaseAllowance(
           this.selectedMarket,
-          toTokens(this.buyAmount),
+          toTokens(this.payAmount),
       ).send({from: sender})
           .on('receipt', this.genericReceiptCallback)
           .on('error', this.genericErrorCallback);
