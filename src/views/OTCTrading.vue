@@ -61,7 +61,7 @@
               <base-button block @click="prepareMakeOffer" type="primary" icon="ni ni-send">Make Offer</base-button>
             </div>
             <div class="col-md-2">
-              <base-button block @click="getOfferCount" type="primary">Trading Pair Info</base-button>
+              <base-button block @click="getTradingPairInfo" type="primary">Trading Pair Info</base-button>
             </div>
           </div>
 
@@ -112,7 +112,7 @@
         </div>
       </div>
     </modal>
-    <modal :show.sync="modals.modalTradingPairInfo" gradient="info">
+    <modal :show.sync="modals.modalTradingPairInfo" gradient="white">
       <template slot="header">
         <h5 class="modal-title">OTC Market trading pair information</h5>
       </template>
@@ -120,7 +120,13 @@
         <i class="ni ni-bell-55 ni-3x"></i>
         <h4 class="heading mt-4">{{ tokenMap.get(selectedBuyToken).symbol }} / {{ tokenMap.get(selectedPayToken).symbol }}</h4>
         <p>
-          <span class="text-lg font-weight-bold">{{ currentTradingPairOfferCount }} </span>
+          <span class="text-lg font-weight-bold">{{ currentTradingPairInfo.offerCount }} offers</span>
+        </p>
+        <p>
+          <span class="text-lg font-weight-bold"> Best offer</span>
+        </p>
+        <p>
+          <span class="text-lg font-weight-bold text-danger"> {{bestOfferPayAmount}}</span> / <span class="text-lg font-weight-bold text-success"> {{bestOfferBuyAmount}}</span>
         </p>
       </div>
       <template slot="footer">
@@ -136,7 +142,7 @@
 </template>
 <script>
 import {mapState} from "vuex";
-import {toTokens} from "@/services/eth-utils";
+import {toTokens, fromTokens} from "@/services/eth-utils";
 import FacebookLoader from '@bit/joshk.vue-spinners-css.facebook-loader';
 
 export default {
@@ -150,7 +156,16 @@ export default {
         makeOffer: false,
         modalTradingPairInfo: false,
       },
-      currentTradingPairOfferCount: 0,
+      currentTradingPairInfo: {
+        offerCount: 0,
+        bestOfferId: 0,
+        bestOffer: {
+          payToken: '',
+          payAmount: 0,
+          buyToken: '',
+          buyAmount: 0,
+        }
+      },
       tokenMap: new Map,
       trackedTokens: [],
       trackedMarkets: [],
@@ -163,13 +178,31 @@ export default {
     }
   },
   methods: {
+    async getTradingPairInfo(){
+      await this.getOfferCount()
+      await this.getBestOffer()
+    },
     async getOfferCount() {
       const matchingMarket = this.smartContractManager.newMatchingMarketContract(this.selectedMarket)
-      this.currentTradingPairOfferCount = await matchingMarket.methods
+      this.currentTradingPairInfo.offerCount = await matchingMarket.methods
           .getOfferCount(this.selectedPayToken, this.selectedBuyToken)
           .call()
-      console.log(this.currentTradingPairOfferCount)
       this.modals.modalTradingPairInfo = true
+    },
+    async getBestOffer(){
+      const matchingMarket = this.smartContractManager.newMatchingMarketContract(this.selectedMarket)
+      this.currentTradingPairInfo.bestOfferId = await matchingMarket.methods
+          .getBestOffer(this.selectedPayToken, this.selectedBuyToken)
+          .call()
+      const offer = await matchingMarket.methods
+          .getOffer(this.currentTradingPairInfo.bestOfferId)
+          .call()
+      this.currentTradingPairInfo.bestOffer = {
+        payAmount: offer[0],
+        payToken: offer[1],
+        buyAmount:  offer[2],
+        buyToken:  offer[3],
+      }
     },
     cancelMakeOffer() {
       this.modals.makeOffer = false
@@ -273,6 +306,12 @@ export default {
     },
   },
   computed: {
+    bestOfferBuyAmount(){
+      return fromTokens(this.currentTradingPairInfo.bestOffer.buyAmount)
+    },
+    bestOfferPayAmount(){
+      return fromTokens(this.currentTradingPairInfo.bestOffer.payAmount)
+    },
     ...mapState([
       'data',
       'smartContractManager'
