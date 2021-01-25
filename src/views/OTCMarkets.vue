@@ -12,7 +12,6 @@
       <div class="row">
         <div class="col-md-12">
           <datetime format="YYYY-MM-DD H:i:s" v-model="form.deploy.closeTime"></datetime>
-          <!--base-input label="Close Time" v-model="form.deploy.closeTime"></base-input-->
         </div>
       </div>
       <div class="row">
@@ -54,6 +53,10 @@
                     <div class="icon icon-shape">
                       <a @click="prepareUnRegister(market)"><span class="text-danger mr-2"><i
                           class="fa fa-trash"></i> </span></a>
+                    </div>
+                    <div class="icon icon-shape">
+                      <a @click="initCloseMarket(market)"><span class="text-danger mr-2"><i
+                          class="fa fa-store"></i> </span></a>
                     </div>
                   </div>
                 </div>
@@ -126,6 +129,37 @@
         </base-button>
       </template>
     </modal>
+    <modal :show.sync="modals.modalCloseMarket"
+           gradient="warning"
+           modal-classes="modal-warning modal-dialog-centered">
+      <h6 slot="header" class="modal-title">Your attention is required</h6>
+
+      <div class="py-3 text-center">
+        <i class="ni ni-bell-55 ni-3x"></i>
+        <h4 class="heading mt-4">Information</h4>
+        <p>This action will close the OTC Market, no further trading will be possible after this action.</p>
+      </div>
+
+      <template slot="footer">
+        <base-button type="white" @click="confirmCloseMarket">Ok, close it</base-button>
+        <base-button type="link"
+                     text-color="white"
+                     class="ml-auto"
+                     @click="cancelCloseMarket">
+          Cancel
+        </base-button>
+      </template>
+    </modal>
+    <modal :show.sync="loading" gradient="light">
+      <template slot="header">
+        <h5 class="modal-title">Please wait...</h5>
+      </template>
+      <div>
+        <div class="text-center">
+          <FacebookLoader :loading="loading" :color="'#283593'" :size="200"/>
+        </div>
+      </div>
+    </modal>
 
   </div>
 </template>
@@ -141,15 +175,18 @@ export default {
   },
   data() {
     return {
+      loading: false,
       matchingMarketContract: null,
       matchingMarketArtifacts: null,
       modals: {
         modalTrackNew: false,
         modalUnRegister: false,
+        modalCloseMarket: false,
       },
       trackedTokens: [],
       trackedMarkets: [],
       marketToUnRegister: null,
+      marketToClose: null,
       form: {
         deploy: {
           name: '',
@@ -164,6 +201,37 @@ export default {
     }
   },
   methods: {
+    initCloseMarket(market){
+      this.marketToClose = market
+      this.modals.modalCloseMarket = true
+    },
+    cancelCloseMarket(){
+      this.marketToClose = null
+      this.modals.modalCloseMarket = false
+    },
+    confirmCloseMarket(){
+      this.loading = true
+      const matchingMarket = this.smartContractManager.newMatchingMarketContract(this.marketToClose.address)
+      const sender = window.ethereum.selectedAddress
+      matchingMarket.methods.stop()
+          .send({from: sender})
+          .on('receipt', this.closeMarketReceiptCallback)
+          .on('error', this.closeMarketErrorCallback);
+    },
+    closeMarketReceiptCallback(receipt) {
+      this.$notifyMessage('success', 'Market closed.')
+      console.log(receipt)
+      this.modals.modalCloseMarket = false
+      this.marketToClose = null
+      this.loading = false
+    },
+    closeMarketErrorCallback(error) {
+      this.$notifyMessage('danger', 'Trade failed')
+      console.error(error)
+      this.modals.modalCloseMarket = false
+      this.marketToClose = null
+      this.loading = false
+    },
     timestampToDate(t){
       const dateTime = new Date(t)
       return dateTime.toLocaleDateString() + " " + dateTime.toLocaleTimeString()
