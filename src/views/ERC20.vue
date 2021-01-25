@@ -53,6 +53,10 @@
                       <a @click="prepareUnRegister(token)"><span class="text-danger mr-2"><i
                           class="fa fa-trash"></i> </span></a>
                     </div>
+                    <div class="icon icon-shape">
+                      <a @click="interact(token)"><span class="text-success mr-2"><i
+                          class="fa fa-sign-in-alt"></i> </span></a>
+                    </div>
                   </div>
                 </div>
 
@@ -170,6 +174,10 @@ export default {
     }
   },
   methods: {
+    interact(token){
+      this.$router.push({ name: 'erc20-interact', params: { address: token.address } })
+
+    },
     async trackNewToken() {
       registerERC20(
           this.data.erc20Store,

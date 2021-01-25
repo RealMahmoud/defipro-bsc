@@ -26,6 +26,11 @@ export default new Router({
           component: () => import(/* webpackChunkName: "demo" */ './views/ERC20.vue')
         },
         {
+          path: '/erc20-interact/:address',
+          name: 'erc20-interact',
+          component: () => import(/* webpackChunkName: "demo" */ './views/ERC20Interact.vue')
+        },
+        {
           path: '/otc-markets',
           name: 'otc-markets',
           component: () => import(/* webpackChunkName: "demo" */ './views/OTCMarkets.vue')
