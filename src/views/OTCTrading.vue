@@ -168,6 +168,7 @@ export default {
       this.currentTradingPairOfferCount = await matchingMarket.methods
           .getOfferCount(this.selectedPayToken, this.selectedBuyToken)
           .call()
+      console.log(this.currentTradingPairOfferCount)
       this.modals.modalTradingPairInfo = true
     },
     cancelMakeOffer() {
@@ -200,11 +201,12 @@ export default {
         console.log('Buy Amount: ', this.buyAmount)
         const matchingMarket = this.smartContractManager.newMatchingMarketContract(this.selectedMarket)
         const sender = window.ethereum.selectedAddress
-        matchingMarket.methods.make(
-            this.selectedPayToken,
-            this.selectedBuyToken,
+        matchingMarket.methods.offer(
             toTokens(this.payAmount),
+            this.selectedPayToken,
             toTokens(this.buyAmount),
+            this.selectedBuyToken,
+            0
         )
             .send({from: sender})
             .on('receipt', this.makeOfferReceiptCallback)
