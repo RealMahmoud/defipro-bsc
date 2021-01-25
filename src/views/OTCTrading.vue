@@ -60,7 +60,11 @@
             <div class="col-md-2">
               <base-button block @click="prepareMakeOffer" type="primary" icon="ni ni-send">Make Offer</base-button>
             </div>
+            <div class="col-md-2">
+              <base-button block @click="getOfferCount" type="primary">Trading Pair Info</base-button>
+            </div>
           </div>
+
         </div>
 
       </div>
@@ -108,6 +112,26 @@
         </div>
       </div>
     </modal>
+    <modal :show.sync="modals.modalTradingPairInfo" gradient="info">
+      <template slot="header">
+        <h5 class="modal-title">OTC Market trading pair information</h5>
+      </template>
+      <div class="py-3 text-center" v-if="selectedPayToken !== null && selectedBuyToken !== null">
+        <i class="ni ni-bell-55 ni-3x"></i>
+        <h4 class="heading mt-4">{{ tokenMap.get(selectedBuyToken).symbol }} / {{ tokenMap.get(selectedPayToken).symbol }}</h4>
+        <p>
+          <span class="text-lg font-weight-bold">{{ currentTradingPairOfferCount }} </span>
+        </p>
+      </div>
+      <template slot="footer">
+        <base-button type="link"
+                     text-color="white"
+                     class="ml-auto"
+                     @click="modals.modalTradingPairInfo = false">
+          Got it.
+        </base-button>
+      </template>
+    </modal>
   </div>
 </template>
 <script>
@@ -124,7 +148,9 @@ export default {
       loading: false,
       modals: {
         makeOffer: false,
+        modalTradingPairInfo: false,
       },
+      currentTradingPairOfferCount: 0,
       tokenMap: new Map,
       trackedTokens: [],
       trackedMarkets: [],
@@ -137,6 +163,13 @@ export default {
     }
   },
   methods: {
+    async getOfferCount() {
+      const matchingMarket = this.smartContractManager.newMatchingMarketContract(this.selectedMarket)
+      this.currentTradingPairOfferCount = await matchingMarket.methods
+          .getOfferCount(this.selectedPayToken, this.selectedBuyToken)
+          .call()
+      this.modals.modalTradingPairInfo = true
+    },
     cancelMakeOffer() {
       this.modals.makeOffer = false
     },
