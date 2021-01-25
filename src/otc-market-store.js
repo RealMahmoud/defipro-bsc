@@ -1,5 +1,6 @@
 import {STORAGE_KEYS} from "@/storage-keys";
 import {getFromStorageOrDefault, writeToStorage} from "@/storage";
+import {increaseOtcMarketCreatedCount} from "@/analytics-store";
 
 const otcMarketStore = getFromStorageOrDefault(STORAGE_KEYS.otcMarkets, {markets: []})
 
@@ -15,6 +16,7 @@ function registerOtcMarket(store, name, closeTime, address) {
         address: address,
     })
     writeToStorage(STORAGE_KEYS.otcMarkets, store)
+    increaseOtcMarketCreatedCount()
 }
 
 function unRegisterOtcMarket(store, name) {

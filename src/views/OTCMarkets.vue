@@ -265,6 +265,7 @@ export default {
     },
     deploy(evt) {
       try {
+        this.loading = true
         evt.preventDefault();
         const name = this.form.deploy.name
         const closeTime = this.form.deploy.closeTime
@@ -280,6 +281,7 @@ export default {
       } catch (e) {
         this.$notifyMessage('danger', 'Deployment failed')
         console.error(e)
+        this.loading = true
       }
     },
     deploySendTransactionCallback(err, transactionHash) {
@@ -300,9 +302,11 @@ export default {
           receipt.contractAddress,
       )
       await this.initData()
+      this.loading = false
     },
     onDeployed(instance) {
       console.log(instance)
+      this.loading = false
     },
     async prepareUnRegister(market) {
       this.marketToUnRegister = market

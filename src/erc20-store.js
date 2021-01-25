@@ -1,5 +1,6 @@
 import {STORAGE_KEYS} from "@/storage-keys";
 import {getFromStorageOrDefault, writeToStorage} from "@/storage";
+import {increaseERC20CreatedCount} from "@/analytics-store";
 
 const erc20Store = getFromStorageOrDefault(STORAGE_KEYS.erc20Instances, {erc20TrackedTokens: []})
 
@@ -22,6 +23,7 @@ function registerERC20(store, symbol, name, supply, address) {
         supply: supply,
     })
     writeToStorage(STORAGE_KEYS.erc20Instances, store)
+    increaseERC20CreatedCount()
 }
 
 function unRegisterERC20(store, symbol) {
