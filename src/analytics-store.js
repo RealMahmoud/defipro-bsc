@@ -11,6 +11,8 @@ const defaultAnalytics = {
     otcTrading: {
         offersMadeSuccess: 0,
         offersMadeError: 0,
+        sellAmounts: [],
+        buyAmounts: [],
     }
 }
 const analyticsStore = getFromStorageOrDefault(STORAGE_KEYS.analytics, defaultAnalytics)
@@ -52,11 +54,32 @@ function increaseOtcTradingOffersMadeError(store = null) {
     writeToStorage(STORAGE_KEYS.analytics, store)
 }
 
+function pushSellAmount(store = null, amount){
+    if(store === null){
+        store = reloadAnalyticsStore()
+    }
+    store.otcTrading.sellAmounts.push(amount)
+    writeToStorage(STORAGE_KEYS.analytics, store)
+    console.log(store)
+}
+
+function pushBuyAmount(store = null, amount){
+    if(store === null){
+        store = reloadAnalyticsStore()
+    }
+    store.otcTrading.buyAmounts.push(amount)
+    writeToStorage(STORAGE_KEYS.analytics, store)
+    console.log(store)
+
+}
+
 export {
     analyticsStore,
     reloadAnalyticsStore,
     increaseOtcMarketCreatedCount,
     increaseERC20CreatedCount,
     increaseOtcTradingOffersMadeSuccess,
-    increaseOtcTradingOffersMadeError
+    increaseOtcTradingOffersMadeError,
+    pushBuyAmount,
+    pushSellAmount
 }

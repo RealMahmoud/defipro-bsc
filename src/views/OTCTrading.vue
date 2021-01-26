@@ -215,7 +215,13 @@
 import {mapState} from "vuex";
 import {fromTokens, toTokens} from "@/services/eth-utils";
 import FacebookLoader from '@bit/joshk.vue-spinners-css.facebook-loader';
-import {increaseOtcTradingOffersMadeError, increaseOtcTradingOffersMadeSuccess} from "@/analytics-store";
+import {
+  increaseOtcTradingOffersMadeError,
+  increaseOtcTradingOffersMadeSuccess,
+  pushBuyAmount,
+  pushSellAmount,
+  reloadAnalyticsStore
+} from "@/analytics-store";
 
 export default {
   components: {
@@ -254,10 +260,10 @@ export default {
     }
   },
   methods: {
-    buyOffer(offer){
+    buyOffer(offer) {
       console.log(offer)
     },
-    killOffer(offer){
+    killOffer(offer) {
       this.modals.modalOrderBook = false
       this.loading = true
       const sender = window.ethereum.selectedAddress
@@ -420,9 +426,12 @@ export default {
     },
     makeOfferReceiptCallback(receipt) {
       this.$notifyMessage('success', 'Offer submitted to the matching engine.')
+      const analyticsStore = reloadAnalyticsStore()
+      increaseOtcTradingOffersMadeSuccess(analyticsStore)
+      pushBuyAmount(analyticsStore, parseInt(this.buyAmount, 10))
+      pushSellAmount(analyticsStore, parseInt(this.payAmount, 10))
       console.log(receipt)
       this.modals.makeOffer = false
-      increaseOtcTradingOffersMadeSuccess()
       this.loading = false
     },
     makeOfferErrorCallback(error) {
