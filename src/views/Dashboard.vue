@@ -44,7 +44,7 @@
     <!--Charts-->
     <div class="container-fluid mt--7">
       <div class="row">
-        <div class="col-xl-12 mb-5 mb-xl-0">
+        <div class="col-xl-8 mb-5 mb-xl-0">
           <card type="default" header-classes="bg-transparent">
             <div slot="header" class="row align-items-center">
               <div class="col">
@@ -62,36 +62,63 @@
 
           </card>
         </div>
+        <div class="col-xl-4">
+          <card header-classes="bg-transparent">
+            <div slot="header" class="row align-items-center">
+              <div class="col">
+                <h6 class="text-uppercase text-muted ls-1 mb-1">Trading trends</h6>
+                <h5 class="h3 mb-0">Top trading pairs</h5>
+              </div>
+            </div>
+
+            <bar-chart
+                :height="350"
+                ref="barChart"
+                :chart-data="topTradingPairChart.chartData"
+            >
+            </bar-chart>
+          </card>
+        </div>
       </div>
     </div>
 
   </div>
 </template>
 <script>
-import {reloadAnalyticsStore} from "@/analytics-store"
+import {reloadAnalyticsStore, topNTradingPairs} from "@/analytics-store"
 import {mapState} from "vuex";
 import LineChart from '@/components/Charts/LineChart';
+import BarChart from '@/components/Charts/BarChart';
+
 import * as chartConfigs from "@/components/Charts/config";
 
 
 export default {
   components: {
     LineChart,
+    BarChart,
   },
   data() {
     return {
       analyticsStore: reloadAnalyticsStore(),
+      topPairs: null,
       buyAmountChart: {
         chartData: {
           datasets: [],
           labels: [],
         },
         extraOptions: chartConfigs.buyAmountChartOptions,
+      },
+      topTradingPairChart: {
+        chartData: {
+          labels: [],
+          datasets: []
+        }
       }
     }
   },
   methods: {
-    initBuyAmountChart(){
+    initBuyAmountChart() {
       const labels = []
       // eslint-disable-next-line no-unused-vars
       this.analyticsStore.otcTrading.buyAmounts.forEach(t => {
@@ -114,9 +141,32 @@ export default {
       };
       this.buyAmountChart.chartData = chartData
     },
+    initTopTradingPairsChart(){
+      const labels = []
+      const values = []
+      // eslint-disable-next-line no-unused-vars
+      this.topPairs.forEach(t => {
+        labels.push(t.name)
+        values.push(t.value)
+      })
+
+      const chartData = {
+        datasets: [
+          {
+            label: 'Trades',
+            data: values,
+            backgroundColor: '#0d47a1',
+          },
+        ],
+        labels: labels,
+      };
+      this.topTradingPairChart.chartData = chartData
+    }
   },
   mounted() {
     this.initBuyAmountChart()
+    this.topPairs = topNTradingPairs(null, 5)
+    this.initTopTradingPairsChart()
   },
   computed: {
     ...mapState([

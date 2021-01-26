@@ -90,6 +90,35 @@ function tradingPairName(buyToken, sellToken){
     return buyToken + '/' + sellToken
 }
 
+function topNTradingPairs(store = null, n){
+    if(store === null){
+        store = reloadAnalyticsStore()
+    }
+    console.log(n)
+    const tradingPairsStore = store.otcTrading.tradingPairs
+    const pairs = []
+    for (const property in tradingPairsStore) {
+        pairs.push({
+            name: property,
+            value: tradingPairsStore[property].count,
+            })
+    }
+    pairs.sort((a, b) => {
+        if(a.value > b.value){
+            return -1
+        }
+        if(a.value < b.value){
+            return 1
+        }
+        return 0
+    })
+    const topPairs = []
+    for (let i = 0; i < pairs.length && i < n; i++) {
+        topPairs.push(pairs[i])
+    }
+    return topPairs
+}
+
 export {
     analyticsStore,
     reloadAnalyticsStore,
@@ -100,5 +129,6 @@ export {
     pushBuyAmount,
     pushSellAmount,
     incrementTradingPairCount,
-    tradingPairName
+    tradingPairName,
+    topNTradingPairs
 }
