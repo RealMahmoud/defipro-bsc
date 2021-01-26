@@ -496,3 +496,14 @@ export let barChartOptions = {
     ]
   }
 };
+
+export let buyAmountChartOptions = {
+  scales: {
+    yAxes: [{
+      gridLines: {
+        color: Charts.colors.gray[700],
+        zeroLineColor: Charts.colors.gray[700]
+      },
+    }]
+  }
+};
