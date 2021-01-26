@@ -20,6 +20,24 @@
               >
               </stats-card>
             </div>
+            <div class="col-xl-3 col-lg-6">
+              <stats-card title="Trade Offers success"
+                          type="gradient-success"
+                          :sub-title="'' + analyticsStore.otcTrading.offersMadeSuccess"
+                          icon="fa fa-exchange-alt"
+                          class="mb-4 mb-xl-0"
+              >
+              </stats-card>
+            </div>
+            <div class="col-xl-3 col-lg-6">
+              <stats-card title="Trade Offers error"
+                          type="gradient-danger"
+                          :sub-title="'' + analyticsStore.otcTrading.offersMadeError"
+                          icon="fa fa-exchange-alt"
+                          class="mb-4 mb-xl-0"
+              >
+              </stats-card>
+            </div>
           </div>
         </base-header>
 
