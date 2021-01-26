@@ -145,7 +145,8 @@
       </template>
     </modal>
 
-    <modal :show.sync="modals.modalOrderBook && displayOrderBook" gradient="white">
+    <modal :show.sync="modals.modalOrderBook && displayOrderBook" gradient="white"
+           :show-close="false">
       <template slot="header">
         <h4 class="modal-title">{{ tokenMap.get(selectedBuyToken).symbol }} / {{
             tokenMap.get(selectedPayToken).symbol
@@ -172,31 +173,33 @@
         </div>
         <div class="row mb-2">
           <div class="col-md-12">
-           <h5>{{currentOffer.owner}}</h5>
+            <h5>{{ currentOffer.owner }}</h5>
           </div>
         </div>
         <div class="row">
           <div class="col-6">
-            <base-button icon="fa fa-step-backward" @click="previousOffer" :disabled="isFirstOffer(currentOffer)"></base-button>
+            <base-button icon="fa fa-step-backward" @click="previousOffer"
+                         :disabled="isFirstOffer(currentOffer)"></base-button>
           </div>
           <div class="col-6">
-            <base-button icon="fa fa-step-forward" @click="nextOffer" :disabled="isLastOffer(currentOffer)"></base-button>
+            <base-button icon="fa fa-step-forward" @click="nextOffer"
+                         :disabled="isLastOffer(currentOffer)"></base-button>
           </div>
         </div>
-        <div class="row" v-if="isOwner(currentOffer)">
-          <base-button type="link"
-                       class="ml-auto"
-          >
-            Kill Order
-          </base-button>
+        <div class="row mt-2 mb-2">
+          <div class="col-md-6">
+            <base-button block type="primary" @click="buyOffer(currentOffer)">
+              Buy
+            </base-button>
+          </div>
+          <div class="col-md-6">
+            <base-button block type="danger" :disabled="!isOwner(currentOffer)" @click="killOffer(currentOffer)">
+              Kill
+            </base-button>
+          </div>
         </div>
       </div>
       <template slot="footer">
-        <base-button type="link"
-                     class="ml-auto"
-        >
-          Buy
-        </base-button>
         <base-button type="link"
                      class="ml-auto"
                      @click="closeOrderBook"
@@ -251,13 +254,24 @@ export default {
     }
   },
   methods: {
-    isOwner(offer){
-      if(offer === null){
+    buyOffer(offer){
+      console.log(offer)
+    },
+    killOffer(offer){
+      this.modals.modalOrderBook = false
+      this.loading = true
+      const sender = window.ethereum.selectedAddress
+      const matchingMarket = this.smartContractManager.newMatchingMarketContract(this.selectedMarket)
+      matchingMarket.methods.cancel(
+          offer.id,
+      ).send({from: sender})
+          .on('receipt', this.genericReceiptCallback)
+          .on('error', this.genericErrorCallback);
+    },
+    isOwner(offer) {
+      if (offer === null) {
         return false
       }
-      console.log('owner: ', offer.owner)
-      console.log('sender: ', window.ethereum.selectedAddress)
-      console.log(offer.owner === window.ethereum.selectedAddress)
       return offer.owner.toUpperCase() === window.ethereum.selectedAddress.toUpperCase()
     },
     getCurrentOffer() {
@@ -323,6 +337,7 @@ export default {
           .offers(id)
           .call()
       return {
+        id: id,
         sellAmount: fromTokens(offer[0]),
         buyAmount: fromTokens(offer[2]),
         owner: offer[4],
