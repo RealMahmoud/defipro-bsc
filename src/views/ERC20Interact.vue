@@ -68,7 +68,7 @@
                     <b-form-input
                         class="mr-2"
                         placeholder="Enter account address" v-model="balanceOf.address"></b-form-input>
-                    <b-button variant="dark" class="mr-2" >Me</b-button>
+                    <b-button variant="dark" class="mr-2" @click="fillBalanceOfAddressWithSelectedEthereumAddress">Me</b-button>
                     <b-button disabled v-if="balanceOf.balance != null" variant="outline-info">
                       {{balanceOf.balance}}
                     </b-button>
@@ -88,7 +88,7 @@
               </b-card-header>
               <b-collapse accordion="my-accordion" id="accordion-transfer" role="tabpanel">
                 <b-card-body>
-                  <b-input-group class="mt-2" prepend="From">
+                  <b-input-group class="mt-2" prepend="To">
                     <b-form-input
                         class="mr-2"
                         placeholder="Enter recipient address" v-model="transfer.recipient"></b-form-input>
@@ -217,7 +217,7 @@
 </template>
 <script>
 import {mapState} from "vuex";
-import {fromTokens} from "@/services/eth-utils"
+import {fromTokens, toTokens} from "@/services/eth-utils"
 
 export default {
   components: {},
@@ -271,13 +271,14 @@ export default {
     },
     async loadERC20FromAddress(address) {
       if (address !== null) {
-        this.erc20Token.contract = this.smartContractManager.getErcInstanceFromAddress(window.ethereum.selectedAddress, address)
-        const erc20Info = await this.smartContractManager.getErc20Info(this.erc20Token.contract)
+        const contractInstance = this.smartContractManager.getErcInstanceFromAddress(window.ethereum.selectedAddress, address)
+        const erc20Info = await this.smartContractManager.getErc20Info(contractInstance)
         this.erc20Token = {
           name: erc20Info.name,
           address: address,
           symbol: erc20Info.symbol,
           supply: erc20Info.totalSupply,
+          contract: contractInstance,
         }
       }
     },
@@ -303,15 +304,17 @@ export default {
       this.balanceOf.address = window.ethereum.selectedAddress;
     },
     async callBalanceOf() {
-      this.balanceOf.balance = await this.contract.methods.balanceOf(this.balanceOf.address).call();
+      this.balanceOf.balance = fromTokens(await this.erc20Token.contract.methods.balanceOf(this.balanceOf.address).call());
     },
     async callAllowance() {
-      this.allowance.returnValue = await this.contract.methods.allowance(this.allowance.owner, this.allowance.spender).call();
+      this.allowance.returnValue = fromTokens(await this.erc20Token.contract.methods.allowance(this.allowance.owner, this.allowance.spender).call());
     },
     async sendTransfer() {
       this.transfer.inProgress = true;
       const transferReturn = this.transfer;
-      this.contract.methods.transfer(this.transfer.recipient, this.transfer.amount).send()
+      this.erc20Token.contract.methods.transfer(this.transfer.recipient, toTokens(this.transfer.amount)).send(
+          {from: window.ethereum.selectedAddress}
+      )
           .then(function (receipt) {
             console.log(receipt);
             transferReturn.receipt = receipt;
@@ -321,7 +324,9 @@ export default {
     async sendTransferFrom() {
       this.transferFrom.inProgress = true;
       const transferFromReturn = this.transferFrom;
-      this.contract.methods.transferFrom(this.transferFrom.sender, this.transferFrom.recipient, this.transferFrom.amount).send()
+      this.erc20Token.contract.methods.transferFrom(this.transferFrom.sender, this.transferFrom.recipient, toTokens(this.transferFrom.amount)).send(
+          {from: window.ethereum.selectedAddress}
+      )
           .then(function (receipt) {
             console.log(receipt);
             transferFromReturn.receipt = receipt;
@@ -331,7 +336,9 @@ export default {
     async sendApprove() {
       this.approve.inProgress = true;
       const approveReturn = this.approve;
-      this.contract.methods.approve(this.approve.spender, this.approve.amount).send()
+      this.erc20Token.contract.methods.approve(this.approve.spender, toTokens(this.approve.amount)).send(
+          {from: window.ethereum.selectedAddress}
+      )
           .then(function (receipt) {
             console.log(receipt);
             approveReturn.receipt = receipt;
