@@ -165,11 +165,21 @@
             </p>
           </div>
         </div>
-        <div class="row text-center">
-          <div class="col-md-6">
+        <div class="row mb-2">
+          <div class="col-md-12">
+            <h5>Owner</h5>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-md-12">
+           <h5>{{currentOffer.owner}}</h5>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
             <base-button icon="fa fa-step-backward" @click="previousOffer" :disabled="isFirstOffer(currentOffer)"></base-button>
           </div>
-          <div class="col-md-6">
+          <div class="col-6">
             <base-button icon="fa fa-step-forward" @click="nextOffer" :disabled="isLastOffer(currentOffer)"></base-button>
           </div>
         </div>
@@ -265,11 +275,9 @@ export default {
         this.loading = false
         return
       }
-      orderBook.push({
-        sellAmount: fromTokens(this.currentTradingPairInfo.bestOffer.payAmount),
-        buyAmount: fromTokens(this.currentTradingPairInfo.bestOffer.buyAmount),
-        index: orderIndex,
-      })
+      const order = await this.getOffer(currentOfferId)
+      order.index = orderIndex
+      orderBook.push(order)
       this.currentOffer = orderBook[0]
       let continueFetchOrders = true
       while (continueFetchOrders) {
@@ -296,11 +304,12 @@ export default {
     async getOffer(id) {
       const matchingMarket = this.smartContractManager.newMatchingMarketContract(this.selectedMarket)
       const offer = await matchingMarket.methods
-          .getOffer(id)
+          .offers(id)
           .call()
       return {
         sellAmount: fromTokens(offer[0]),
         buyAmount: fromTokens(offer[2]),
+        owner: offer[4],
       }
     },
     async getWorseOffer(id) {
