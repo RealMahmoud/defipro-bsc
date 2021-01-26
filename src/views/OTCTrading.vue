@@ -183,6 +183,13 @@
             <base-button icon="fa fa-step-forward" @click="nextOffer" :disabled="isLastOffer(currentOffer)"></base-button>
           </div>
         </div>
+        <div class="row" v-if="isOwner(currentOffer)">
+          <base-button type="link"
+                       class="ml-auto"
+          >
+            Kill Order
+          </base-button>
+        </div>
       </div>
       <template slot="footer">
         <base-button type="link"
@@ -244,6 +251,15 @@ export default {
     }
   },
   methods: {
+    isOwner(offer){
+      if(offer === null){
+        return false
+      }
+      console.log('owner: ', offer.owner)
+      console.log('sender: ', window.ethereum.selectedAddress)
+      console.log(offer.owner === window.ethereum.selectedAddress)
+      return offer.owner.toUpperCase() === window.ethereum.selectedAddress.toUpperCase()
+    },
     getCurrentOffer() {
       return this.orderBook[this.currentOfferIndex]
     },
