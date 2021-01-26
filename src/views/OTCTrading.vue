@@ -252,6 +252,8 @@ export default {
     closeOrderBook() {
       this.modals.modalOrderBook = false
       this.orderBook = []
+      this.currentOfferIndex = 0
+      this.currentOffer = null
     },
     async navigateOrderBook() {
       this.loading = true
