@@ -67,7 +67,7 @@
             <div slot="header" class="row align-items-center">
               <div class="col">
                 <h6 class="text-uppercase text-muted ls-1 mb-1">Trading trends</h6>
-                <h5 class="h3 mb-0">Top trading pairs</h5>
+                <h5 class="h3 mb-0">TOP PAIRS</h5>
               </div>
             </div>
 
