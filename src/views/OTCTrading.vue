@@ -187,12 +187,16 @@
           </div>
         </div>
         <div class="row mt-2 mb-2">
-          <div class="col-md-6">
+          <div class="col-md-4">
+            <base-input v-model="form.orderBook.buyAmount">
+            </base-input>
+          </div>
+          <div class="col-md-4">
             <base-button block type="primary" @click="buyOffer(currentOffer)">
               Buy
             </base-button>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-4">
             <base-button block type="danger" :disabled="!isOwner(currentOffer)" @click="killOffer(currentOffer)">
               Kill
             </base-button>
@@ -256,7 +260,11 @@ export default {
       payAmount: 0,
       selectedBuyToken: null,
       buyAmount: 0,
-      form: {},
+      form: {
+        orderBook: {
+          buyAmount: 0,
+        }
+      },
       orderBook: [],
       currentOfferIndex: 0,
       currentOffer: null
@@ -264,7 +272,15 @@ export default {
   },
   methods: {
     buyOffer(offer) {
-      console.log(offer)
+      this.loading = true
+      const sender = window.ethereum.selectedAddress
+      const matchingMarket = this.smartContractManager.newMatchingMarketContract(this.selectedMarket)
+      matchingMarket.methods.buy(
+          offer.id,
+          toTokens(this.form.orderBook.buyAmount)
+      ).send({from: sender})
+          .on('receipt', this.genericReceiptCallback)
+          .on('error', this.genericErrorCallback);
     },
     killOffer(offer) {
       this.modals.modalOrderBook = false
