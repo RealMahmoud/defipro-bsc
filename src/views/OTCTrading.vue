@@ -144,6 +144,7 @@
 import {mapState} from "vuex";
 import {toTokens, fromTokens} from "@/services/eth-utils";
 import FacebookLoader from '@bit/joshk.vue-spinners-css.facebook-loader';
+import {increaseOtcTradingOffersMadeSuccess, increaseOtcTradingOffersMadeError} from "@/analytics-store";
 
 export default {
   components: {
@@ -254,11 +255,13 @@ export default {
       this.$notifyMessage('success', 'Offer submitted to the matching engine.')
       console.log(receipt)
       this.modals.makeOffer = false
+      increaseOtcTradingOffersMadeSuccess()
     },
     makeOfferErrorCallback(error) {
       this.$notifyMessage('danger', 'Trade failed')
       console.error(error)
       this.modals.makeOffer = false
+      increaseOtcTradingOffersMadeError()
     },
     async initData() {
       this.trackedTokens = []
