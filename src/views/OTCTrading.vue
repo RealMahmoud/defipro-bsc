@@ -399,10 +399,7 @@ export default {
     },
     async makeOffer() {
       try {
-        console.log('Pay Token: ', this.selectedPayToken)
-        console.log('Pay Amount: ', this.payAmount)
-        console.log('Buy Token: ', this.selectedBuyToken)
-        console.log('Buy Amount: ', this.buyAmount)
+        this.loading = true
         const matchingMarket = this.smartContractManager.newMatchingMarketContract(this.selectedMarket)
         const sender = window.ethereum.selectedAddress
         matchingMarket.methods.offer(
@@ -426,12 +423,14 @@ export default {
       console.log(receipt)
       this.modals.makeOffer = false
       increaseOtcTradingOffersMadeSuccess()
+      this.loading = false
     },
     makeOfferErrorCallback(error) {
       this.$notifyMessage('danger', 'Trade failed')
       console.error(error)
       this.modals.makeOffer = false
       increaseOtcTradingOffersMadeError()
+      this.loading = false
     },
     async initData() {
       this.trackedTokens = []
