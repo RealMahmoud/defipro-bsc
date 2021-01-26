@@ -54,7 +54,7 @@
     </base-header>
 
     <div class="container-fluid mt--7">
-      <div class="card shadow">
+      <div class="card shadow" v-if="displayInteractForm">
 
         <div class="card-body">
           <div class="accordion mt-2" role="tablist">
