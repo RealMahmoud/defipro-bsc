@@ -1,6 +1,6 @@
 <template>
   <div>
-    <base-header type="gradient-success" class="pb-6 pb-8 pt-5 pt-md-8">
+    <base-header-custom-color custom="#ECB52E" class="pb-6 pb-8 pt-5 pt-md-8">
       <p class="lead text-white">
         Deploy and manage ERC-20 tokens
       </p>
@@ -20,7 +20,7 @@
           <base-button block @click="deploy" type="primary" icon="ni ni-send">Deploy</base-button>
         </div>
       </div>
-    </base-header>
+    </base-header-custom-color>
 
     <div class="container-fluid mt--7">
       <div class="card shadow">
@@ -146,9 +146,12 @@
 import {mapState} from "vuex";
 import {registerERC20, reloadStore, unRegisterERC20} from "@/erc20-store";
 import {toTokens} from "@/services/eth-utils";
+import BaseHeaderCustomColor from "@/components/BaseHeaderCustomColor";
 
 export default {
-  components: {},
+  components: {
+    BaseHeaderCustomColor,
+  },
   data() {
     return {
       loading: false,

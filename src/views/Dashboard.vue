@@ -1,6 +1,6 @@
 <template>
   <div>
-    <base-header type="gradient-success" class="pb-6 pb-8 pt-5 pt-md-8">
+    <base-header-custom-color custom="#ECB52E" class="pb-6 pb-8 pt-5 pt-md-8">
       <div class="row">
         <div class="col-xl-3 col-lg-6">
           <stats-card title="OTC Markets created"
@@ -39,7 +39,7 @@
           </stats-card>
         </div>
       </div>
-    </base-header>
+    </base-header-custom-color>
 
     <!--Charts-->
     <div class="container-fluid mt--7">
@@ -91,10 +91,12 @@ import LineChart from '@/components/Charts/LineChart';
 import BarChart from '@/components/Charts/BarChart';
 
 import * as chartConfigs from "@/components/Charts/config";
+import BaseHeaderCustomColor from "@/components/BaseHeaderCustomColor";
 
 
 export default {
   components: {
+    BaseHeaderCustomColor,
     LineChart,
     BarChart,
   },

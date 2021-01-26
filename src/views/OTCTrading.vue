@@ -1,11 +1,11 @@
 <template>
   <div>
-    <base-header type="gradient-success" class="pb-6 pb-8 pt-5 pt-md-8">
+    <base-header-custom-color custom="#ECB52E" class="pb-6 pb-8 pt-5 pt-md-8">
 
       <p class="lead text-white">
         Trade using On-Chain OTC market matching engine
       </p>
-    </base-header>
+    </base-header-custom-color>
 
     <div class="container-fluid mt--7">
       <div class="card shadow">
@@ -215,6 +215,7 @@
 import {mapState} from "vuex";
 import {fromTokens, toTokens} from "@/services/eth-utils";
 import FacebookLoader from '@bit/joshk.vue-spinners-css.facebook-loader';
+import BaseHeaderCustomColor from "@/components/BaseHeaderCustomColor";
 import {
   increaseOtcTradingOffersMadeError,
   increaseOtcTradingOffersMadeSuccess,
@@ -227,6 +228,7 @@ import {
 export default {
   components: {
     FacebookLoader,
+    BaseHeaderCustomColor,
   },
   data() {
     return {

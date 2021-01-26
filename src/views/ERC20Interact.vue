@@ -1,6 +1,6 @@
 <template>
   <div>
-    <base-header type="gradient-success" class="pb-6 pb-8 pt-5 pt-md-8">
+    <base-header-custom-color custom="#ECB52E" class="pb-6 pb-8 pt-5 pt-md-8">
       <p class="lead text-white">
         Interact with ERC-20 tokens
       </p>
@@ -51,7 +51,7 @@
         </div>
 
       </div>
-    </base-header>
+    </base-header-custom-color>
 
     <div class="container-fluid mt--7">
       <div class="card shadow" v-if="displayInteractForm">
@@ -218,9 +218,11 @@
 <script>
 import {mapState} from "vuex";
 import {fromTokens, toTokens} from "@/services/eth-utils"
-
+import BaseHeaderCustomColor from "@/components/BaseHeaderCustomColor";
 export default {
-  components: {},
+  components: {
+    BaseHeaderCustomColor,
+  },
   data() {
     return {
       tmpSelectedErc20Address: null,

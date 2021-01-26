@@ -14,7 +14,7 @@
                     </div>
                 </div>
             </div>
-        </base-header>
+        </base-header-custom-color>
 
         <div class="container-fluid mt--7">
             <div class="row">
