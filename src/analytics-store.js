@@ -13,6 +13,7 @@ const defaultAnalytics = {
         offersMadeError: 0,
         sellAmounts: [],
         buyAmounts: [],
+        tradingPairs: {},
     }
 }
 const analyticsStore = getFromStorageOrDefault(STORAGE_KEYS.analytics, defaultAnalytics)
@@ -60,7 +61,6 @@ function pushSellAmount(store = null, amount){
     }
     store.otcTrading.sellAmounts.push(amount)
     writeToStorage(STORAGE_KEYS.analytics, store)
-    console.log(store)
 }
 
 function pushBuyAmount(store = null, amount){
@@ -69,8 +69,25 @@ function pushBuyAmount(store = null, amount){
     }
     store.otcTrading.buyAmounts.push(amount)
     writeToStorage(STORAGE_KEYS.analytics, store)
-    console.log(store)
+}
 
+function incrementTradingPairCount(store = null, tradingPairName){
+    if(store === null){
+        store = reloadAnalyticsStore()
+    }
+    // eslint-disable-next-line no-prototype-builtins
+    if(!store.otcTrading.tradingPairs.hasOwnProperty(tradingPairName)){
+        store.otcTrading.tradingPairs[tradingPairName] = {
+            count: 0,
+        }
+    }else{
+        store.otcTrading.tradingPairs[tradingPairName].count  =  store.otcTrading.tradingPairs[tradingPairName].count + 1
+    }
+    writeToStorage(STORAGE_KEYS.analytics, store)
+}
+
+function tradingPairName(buyToken, sellToken){
+    return buyToken + '/' + sellToken
 }
 
 export {
@@ -81,5 +98,7 @@ export {
     increaseOtcTradingOffersMadeSuccess,
     increaseOtcTradingOffersMadeError,
     pushBuyAmount,
-    pushSellAmount
+    pushSellAmount,
+    incrementTradingPairCount,
+    tradingPairName
 }

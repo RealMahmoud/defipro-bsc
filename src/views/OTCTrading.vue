@@ -220,7 +220,8 @@ import {
   increaseOtcTradingOffersMadeSuccess,
   pushBuyAmount,
   pushSellAmount,
-  reloadAnalyticsStore
+  reloadAnalyticsStore,
+  incrementTradingPairCount, tradingPairName,
 } from "@/analytics-store";
 
 export default {
@@ -425,12 +426,20 @@ export default {
       this.modals.makeOffer = false
     },
     makeOfferReceiptCallback(receipt) {
+      console.log(receipt)
       this.$notifyMessage('success', 'Offer submitted to the matching engine.')
       const analyticsStore = reloadAnalyticsStore()
       increaseOtcTradingOffersMadeSuccess(analyticsStore)
       pushBuyAmount(analyticsStore, parseInt(this.buyAmount, 10))
       pushSellAmount(analyticsStore, parseInt(this.payAmount, 10))
-      console.log(receipt)
+      const _tradingPairName = tradingPairName(
+          this.tokenMap.get(this.selectedBuyToken).symbol,
+          this.tokenMap.get(this.selectedPayToken).symbol,
+      )
+      incrementTradingPairCount(
+          analyticsStore,
+          _tradingPairName
+      )
       this.modals.makeOffer = false
       this.loading = false
     },

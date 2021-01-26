@@ -117,7 +117,6 @@ export default {
   },
   mounted() {
     this.initBuyAmountChart()
-    console.log(this.buyAmountChart)
   },
   computed: {
     ...mapState([
