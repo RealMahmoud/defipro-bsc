@@ -272,6 +272,7 @@ export default {
   },
   methods: {
     buyOffer(offer) {
+      this.modals.modalOrderBook = false
       this.loading = true
       const sender = window.ethereum.selectedAddress
       const matchingMarket = this.smartContractManager.newMatchingMarketContract(this.selectedMarket)
