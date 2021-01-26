@@ -61,7 +61,10 @@
               <base-button block @click="prepareMakeOffer" type="primary" icon="ni ni-send">Make Offer</base-button>
             </div>
             <div class="col-md-2">
-              <base-button block @click="getTradingPairInfo" type="primary">Trading Pair Info</base-button>
+              <base-button block @click="getTradingPairInfo(true)" type="primary">Best Offer</base-button>
+            </div>
+            <div class="col-md-2">
+              <base-button block @click="navigateOrderBook" type="primary">Order Book</base-button>
             </div>
           </div>
 
@@ -118,7 +121,9 @@
       </template>
       <div class="py-3 text-center" v-if="selectedPayToken !== null && selectedBuyToken !== null">
         <i class="ni ni-bell-55 ni-3x"></i>
-        <h4 class="heading mt-4">{{ tokenMap.get(selectedBuyToken).symbol }} / {{ tokenMap.get(selectedPayToken).symbol }}</h4>
+        <h4 class="heading mt-4">{{ tokenMap.get(selectedBuyToken).symbol }} / {{
+            tokenMap.get(selectedPayToken).symbol
+          }}</h4>
         <p>
           <span class="text-lg font-weight-bold">{{ currentTradingPairInfo.offerCount }} offers</span>
         </p>
@@ -126,7 +131,8 @@
           <span class="text-lg font-weight-bold"> Best offer</span>
         </p>
         <p>
-          <span class="text-lg font-weight-bold text-danger"> {{bestOfferPayAmount}}</span> / <span class="text-lg font-weight-bold text-success"> {{bestOfferBuyAmount}}</span>
+          <span class="text-lg font-weight-bold text-danger"> {{ bestOfferPayAmount }}</span> / <span
+            class="text-lg font-weight-bold text-success"> {{ bestOfferBuyAmount }}</span>
         </p>
       </div>
       <template slot="footer">
@@ -138,13 +144,58 @@
         </base-button>
       </template>
     </modal>
+
+    <modal :show.sync="modals.modalOrderBook && displayOrderBook" gradient="white">
+      <template slot="header">
+        <h4 class="modal-title">{{ tokenMap.get(selectedBuyToken).symbol }} / {{
+            tokenMap.get(selectedPayToken).symbol
+          }} Order Book</h4>
+      </template>
+      <div class="py-3 text-center" v-if="currentOffer !== null">
+        <div class="row">
+          <div class="col-md-12">
+            <p>
+              <span class="font-weight-bold text-danger" style="font-size: xxx-large"> {{
+                  currentOffer.sellAmount
+                }}</span>
+              <span class="font-weight-bold" style="font-size: xxx-large"> / </span>
+              <span class="font-weight-bold text-success" style="font-size: xxx-large"> {{
+                  currentOffer.buyAmount
+                }}</span>
+            </p>
+          </div>
+        </div>
+        <div class="row text-center">
+          <div class="col-md-6">
+            <base-button icon="fa fa-step-backward" @click="previousOffer" :disabled="isFirstOffer(currentOffer)"></base-button>
+          </div>
+          <div class="col-md-6">
+            <base-button icon="fa fa-step-forward" @click="nextOffer" :disabled="isLastOffer(currentOffer)"></base-button>
+          </div>
+        </div>
+      </div>
+      <template slot="footer">
+        <base-button type="link"
+                     class="ml-auto"
+        >
+          Buy
+        </base-button>
+        <base-button type="link"
+                     class="ml-auto"
+                     @click="closeOrderBook"
+        >
+          Close
+        </base-button>
+      </template>
+    </modal>
+
   </div>
 </template>
 <script>
 import {mapState} from "vuex";
-import {toTokens, fromTokens} from "@/services/eth-utils";
+import {fromTokens, toTokens} from "@/services/eth-utils";
 import FacebookLoader from '@bit/joshk.vue-spinners-css.facebook-loader';
-import {increaseOtcTradingOffersMadeSuccess, increaseOtcTradingOffersMadeError} from "@/analytics-store";
+import {increaseOtcTradingOffersMadeError, increaseOtcTradingOffersMadeSuccess} from "@/analytics-store";
 
 export default {
   components: {
@@ -156,6 +207,7 @@ export default {
       modals: {
         makeOffer: false,
         modalTradingPairInfo: false,
+        modalOrderBook: false,
       },
       currentTradingPairInfo: {
         offerCount: 0,
@@ -175,22 +227,98 @@ export default {
       payAmount: 0,
       selectedBuyToken: null,
       buyAmount: 0,
-      form: {}
+      form: {},
+      orderBook: [],
+      currentOfferIndex: 0,
+      currentOffer: null
     }
   },
   methods: {
-    async getTradingPairInfo(){
-      await this.getOfferCount()
+    getCurrentOffer() {
+      return this.orderBook[this.currentOfferIndex]
+    },
+    nextOffer() {
+      if (this.currentOfferIndex < (this.orderBook.length - 1)) {
+        this.currentOfferIndex++
+        this.currentOffer = this.orderBook[this.currentOfferIndex]
+      }
+    },
+    previousOffer() {
+      if (this.currentOfferIndex > 0) {
+        this.currentOfferIndex--
+        this.currentOffer = this.orderBook[this.currentOfferIndex]
+      }
+    },
+    closeOrderBook() {
+      this.modals.modalOrderBook = false
+      this.orderBook = []
+    },
+    async navigateOrderBook() {
+      this.loading = true
+      await this.getTradingPairInfo(false)
+      const orderBook = []
+      let currentOfferId = this.currentTradingPairInfo.bestOfferId
+      let orderIndex = 0
+      if (currentOfferId == 0) {
+        this.loading = false
+        return
+      }
+      orderBook.push({
+        sellAmount: fromTokens(this.currentTradingPairInfo.bestOffer.payAmount),
+        buyAmount: fromTokens(this.currentTradingPairInfo.bestOffer.buyAmount),
+        index: orderIndex,
+      })
+      this.currentOffer = orderBook[0]
+      let continueFetchOrders = true
+      while (continueFetchOrders) {
+        orderIndex++
+        currentOfferId = await this.getWorseOffer(currentOfferId)
+        if (currentOfferId == 0) {
+          continueFetchOrders = false
+        } else {
+          const order = await this.getOffer(currentOfferId)
+          order.index = orderIndex
+          orderBook.push(order)
+        }
+      }
+      this.orderBook = orderBook
+      this.loading = false
+      this.modals.modalOrderBook = true
+    },
+    isFirstOffer(offer) {
+      return offer.index === 0
+    },
+    isLastOffer(offer) {
+      return offer.index === (this.orderBook.length - 1)
+    },
+    async getOffer(id) {
+      const matchingMarket = this.smartContractManager.newMatchingMarketContract(this.selectedMarket)
+      const offer = await matchingMarket.methods
+          .getOffer(id)
+          .call()
+      return {
+        sellAmount: fromTokens(offer[0]),
+        buyAmount: fromTokens(offer[2]),
+      }
+    },
+    async getWorseOffer(id) {
+      const matchingMarket = this.smartContractManager.newMatchingMarketContract(this.selectedMarket)
+      return await matchingMarket.methods
+          .getWorseOffer(id)
+          .call()
+    },
+    async getTradingPairInfo(displayModal) {
+      await this.getOfferCount(displayModal)
       await this.getBestOffer()
     },
-    async getOfferCount() {
+    async getOfferCount(displayModal) {
       const matchingMarket = this.smartContractManager.newMatchingMarketContract(this.selectedMarket)
       this.currentTradingPairInfo.offerCount = await matchingMarket.methods
           .getOfferCount(this.selectedPayToken, this.selectedBuyToken)
           .call()
-      this.modals.modalTradingPairInfo = true
+      this.modals.modalTradingPairInfo = displayModal
     },
-    async getBestOffer(){
+    async getBestOffer() {
       const matchingMarket = this.smartContractManager.newMatchingMarketContract(this.selectedMarket)
       this.currentTradingPairInfo.bestOfferId = await matchingMarket.methods
           .getBestOffer(this.selectedPayToken, this.selectedBuyToken)
@@ -201,8 +329,8 @@ export default {
       this.currentTradingPairInfo.bestOffer = {
         payAmount: offer[0],
         payToken: offer[1],
-        buyAmount:  offer[2],
-        buyToken:  offer[3],
+        buyAmount: offer[2],
+        buyToken: offer[3],
       }
     },
     cancelMakeOffer() {
@@ -309,11 +437,15 @@ export default {
     },
   },
   computed: {
-    bestOfferBuyAmount(){
+    bestOfferBuyAmount() {
       return fromTokens(this.currentTradingPairInfo.bestOffer.buyAmount)
     },
-    bestOfferPayAmount(){
+    bestOfferPayAmount() {
       return fromTokens(this.currentTradingPairInfo.bestOffer.payAmount)
+    },
+    displayOrderBook() {
+      return Array.isArray(this.orderBook) && this.orderBook.length > 0
+          && this.selectedPayToken !== null && this.selectedBuyToken !== null
     },
     ...mapState([
       'data',

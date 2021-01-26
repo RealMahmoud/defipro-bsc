@@ -15,6 +15,8 @@ import {
     faThumbsUp,
     faTrash,
     faExchangeAlt,
+    faStepBackward,
+    faStepForward,
 } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
@@ -33,6 +35,8 @@ library.add(
     faFileCode,
     faSignInAlt,
     faExchangeAlt,
+    faStepBackward,
+    faStepForward,
 );
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
