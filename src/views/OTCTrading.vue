@@ -118,7 +118,7 @@
         </p>
         <p>
           <span class="text-lg font-weight-bold"
-            >{{ payAmount }} {{ tokenMap.get(selectedPayToken).symbol }}
+            >{{ payAmount }} {{ tokenSymbol(selectedPayToken) }}
           </span>
         </p>
         <p>
@@ -126,7 +126,7 @@
         </p>
         <p>
           <span class="text-lg font-weight-bold"
-            >{{ buyAmount }} {{ tokenMap.get(selectedBuyToken).symbol }}
+            >{{ buyAmount }} {{ tokenSymbol(selectedBuyToken) }}
           </span>
         </p>
       </div>
@@ -165,8 +165,8 @@
       >
         <i class="ni ni-bell-55 ni-3x"></i>
         <h4 class="heading mt-4">
-          {{ tokenMap.get(selectedBuyToken).symbol }} /
-          {{ tokenMap.get(selectedPayToken).symbol }}
+          {{ tokenSymbol(selectedBuyToken) }} /
+          {{ tokenSymbol(selectedPayToken) }}
         </h4>
         <p>
           <span class="text-lg font-weight-bold"
@@ -205,8 +205,8 @@
     >
       <template slot="header">
         <h4 class="modal-title">
-          {{ tokenMap.get(selectedBuyToken).symbol }} /
-          {{ tokenMap.get(selectedPayToken).symbol }} Order Book
+          {{ tokenSymbol(selectedBuyToken) }} /
+          {{ tokenSymbol(selectedPayToken) }} Order Book
         </h4>
       </template>
       <div class="py-3 text-center" v-if="currentOffer !== null">
@@ -343,6 +343,12 @@ export default {
     };
   },
   methods: {
+    tokenSymbol(address) {
+      if (address !== null && address !== "" && this.tokenMap.has(address)) {
+        return this.tokenMap.get(address).symbol;
+      }
+      return "";
+    },
     buyOffer(offer) {
       this.modals.modalOrderBook = false;
       this.loading = true;
