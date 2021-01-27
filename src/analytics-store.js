@@ -80,7 +80,7 @@ function incrementTradingPairCount(store = null, tradingPairName) {
   // eslint-disable-next-line no-prototype-builtins
   if (!store.otcTrading.tradingPairs.hasOwnProperty(tradingPairName)) {
     store.otcTrading.tradingPairs[tradingPairName] = {
-      count: 0
+      count: 1
     };
   } else {
     store.otcTrading.tradingPairs[tradingPairName].count =
