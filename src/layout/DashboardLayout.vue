@@ -17,7 +17,7 @@
         <sidebar-item :link="{name: 'OTC Trading', icon: 'ni ni-money-coins text-orange', path: '/otc-trading'}"/>
         <sidebar-item :link="{name: 'Tracked ERC20', icon: 'ni ni-atom text-blue', path: '/erc20'}"/>
         <sidebar-item :link="{name: 'ERC20', icon: 'fa fa-file-code text-green', path: '/erc20-interact/null'}"/>
-        <sidebar-item :link="{name: 'Lending', icon: 'fa fa-credit-card text-pink', path: '/lending'}"/>
+        <!--sidebar-item :link="{name: 'Lending', icon: 'fa fa-credit-card text-pink', path: '/lending'}"/-->
       </template>
     </side-bar>
     <div class="main-content" :data="sidebarBackground">
