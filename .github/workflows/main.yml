@@ -1,4 +1,4 @@
-name: DeFi Pro Maker CI
+name: defipro-bsc-ci
 
 # Controls when the action will run.
 on:
