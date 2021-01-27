@@ -13,10 +13,34 @@
             path: '/dashboard'
           }"
         />
-        <sidebar-item :link="{name: 'OTC Markets', icon: 'ni ni-planet text-blue', path: '/otc-markets'}"/>
-        <sidebar-item :link="{name: 'OTC Trading', icon: 'ni ni-money-coins text-orange', path: '/otc-trading'}"/>
-        <sidebar-item :link="{name: 'Tracked ERC20', icon: 'ni ni-atom text-blue', path: '/erc20'}"/>
-        <sidebar-item :link="{name: 'ERC20', icon: 'fa fa-file-code text-green', path: '/erc20-interact/null'}"/>
+        <sidebar-item
+          :link="{
+            name: 'OTC Markets',
+            icon: 'ni ni-planet text-blue',
+            path: '/otc-markets'
+          }"
+        />
+        <sidebar-item
+          :link="{
+            name: 'OTC Trading',
+            icon: 'ni ni-money-coins text-orange',
+            path: '/otc-trading'
+          }"
+        />
+        <sidebar-item
+          :link="{
+            name: 'Tracked ERC20',
+            icon: 'ni ni-atom text-blue',
+            path: '/erc20'
+          }"
+        />
+        <sidebar-item
+          :link="{
+            name: 'ERC20',
+            icon: 'fa fa-file-code text-green',
+            path: '/erc20-interact/null'
+          }"
+        />
         <!--sidebar-item :link="{name: 'Lending', icon: 'fa fa-credit-card text-pink', path: '/lending'}"/-->
       </template>
     </side-bar>
@@ -34,29 +58,28 @@
   </div>
 </template>
 <script>
-  import DashboardNavbar from './DashboardNavbar.vue';
-  import ContentFooter from './ContentFooter.vue';
-  import { FadeTransition } from 'vue2-transitions';
+import DashboardNavbar from "./DashboardNavbar.vue";
+import ContentFooter from "./ContentFooter.vue";
+import { FadeTransition } from "vue2-transitions";
 
-  export default {
-    components: {
-      DashboardNavbar,
-      ContentFooter,
-      FadeTransition
-    },
-    data() {
-      return {
-        sidebarBackground: 'vue' //vue|blue|orange|green|red|primary
-      };
-    },
-    methods: {
-      toggleSidebar() {
-        if (this.$sidebar.showSidebar) {
-          this.$sidebar.displaySidebar(false);
-        }
+export default {
+  components: {
+    DashboardNavbar,
+    ContentFooter,
+    FadeTransition
+  },
+  data() {
+    return {
+      sidebarBackground: "vue" //vue|blue|orange|green|red|primary
+    };
+  },
+  methods: {
+    toggleSidebar() {
+      if (this.$sidebar.showSidebar) {
+        this.$sidebar.displaySidebar(false);
       }
     }
-  };
+  }
+};
 </script>
-<style lang="scss">
-</style>
+<style lang="scss"></style>

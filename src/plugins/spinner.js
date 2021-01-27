@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from "vue";
 import * as VueSpinnersCss from "vue-spinners-css";
 
-Vue.use(VueSpinnersCss)
+Vue.use(VueSpinnersCss);

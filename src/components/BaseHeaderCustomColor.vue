@@ -8,16 +8,15 @@
   </div>
 </template>
 <script>
-  export default {
-    name: 'base-header-custom-color',
-    props: {
-      custom: {
-        type: String,
-        default: '#ffffff',
-        description: 'Header background color'
-      }
+export default {
+  name: "base-header-custom-color",
+  props: {
+    custom: {
+      type: String,
+      default: "#ffffff",
+      description: "Header background color"
     }
   }
+};
 </script>
-<style>
-</style>
+<style></style>

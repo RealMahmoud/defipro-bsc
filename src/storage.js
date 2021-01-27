@@ -1,20 +1,16 @@
 function getFromStorageOrDefault(name, defaultValue) {
-    if(localStorage.getItem(name)){
-        return JSON.parse(localStorage.getItem(name))
-    }
-    return defaultValue
+  if (localStorage.getItem(name)) {
+    return JSON.parse(localStorage.getItem(name));
+  }
+  return defaultValue;
 }
 
 function writeToStorage(name, value) {
-    localStorage.setItem(name, JSON.stringify(value))
+  localStorage.setItem(name, JSON.stringify(value));
 }
 
 function removeFromStorage(name) {
-    localStorage.removeItem(name)
+  localStorage.removeItem(name);
 }
 
-export{
-    getFromStorageOrDefault,
-    writeToStorage,
-    removeFromStorage,
-}
+export { getFromStorageOrDefault, writeToStorage, removeFromStorage };

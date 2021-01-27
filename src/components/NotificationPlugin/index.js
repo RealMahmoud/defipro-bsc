@@ -1,12 +1,12 @@
-import Notifications from './Notifications.vue';
+import Notifications from "./Notifications.vue";
 
 const NotificationStore = {
   state: [], // here the notifications will be added
   settings: {
     overlap: false,
-    verticalAlign: 'top',
-    horizontalAlign: 'right',
-    type: 'info',
+    verticalAlign: "top",
+    horizontalAlign: "right",
+    type: "info",
     timeout: 5000,
     closeOnClick: true,
     showClose: true
@@ -21,7 +21,7 @@ const NotificationStore = {
     }
   },
   addNotification(notification) {
-    if (typeof notification === 'string' || notification instanceof String) {
+    if (typeof notification === "string" || notification instanceof String) {
       notification = { message: notification };
     }
     notification.timestamp = new Date();
@@ -52,7 +52,12 @@ const NotificationsPlugin = {
         notify(notification) {
           this.notificationStore.notify(notification);
         },
-        notifyMessage(type, message, verticalAlign = 'top', horizontalAlign = 'center') {
+        notifyMessage(
+          type,
+          message,
+          verticalAlign = "top",
+          horizontalAlign = "center"
+        ) {
           this.notify({
             message: message,
             icon: "ni ni-bell-55",
@@ -67,7 +72,7 @@ const NotificationsPlugin = {
     Vue.prototype.$notify = app.notify;
     Vue.prototype.$notifyMessage = app.notifyMessage;
     Vue.prototype.$notifications = app.notificationStore;
-    Vue.component('Notifications', Notifications);
+    Vue.component("Notifications", Notifications);
     if (options) {
       NotificationStore.setOptions(options);
     }
