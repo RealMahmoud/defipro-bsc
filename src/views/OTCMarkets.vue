@@ -11,6 +11,11 @@
       </div>
       <div class="row">
         <div class="col-md-12">
+          <label class="font-weight-bold">Close time</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
           <datetime format="YYYY-MM-DD H:i:s" v-model="form.deploy.closeTime"></datetime>
         </div>
       </div>
@@ -33,8 +38,8 @@
           </div>
           <div class="col text-right">
             <base-button type="primary" size="sm" @click="modals.modalTrackNew = true">Track New OTC</base-button>
-            <base-button type="primary" size="sm" @click="goToTrading" >Buy</base-button>
-            <base-button type="primary" size="sm" @click="goToTrading" >Sell</base-button>
+            <base-button type="primary" size="sm" @click="goToTrading">Buy</base-button>
+            <base-button type="primary" size="sm" @click="goToTrading">Sell</base-button>
           </div>
         </div>
 
@@ -61,7 +66,8 @@
                   </div>
                 </div>
                 <p class="mt-3 mb-0 text-sm">
-                  <span class="text-warning mr-2"><i class="fa fa-calendar-alt"></i> </span>{{ timestampToDate(market.closeTime) }}
+                  <span class="text-warning mr-2"><i
+                      class="fa fa-calendar-alt"></i> </span>{{ timestampToDate(market.closeTime) }}
                 </p>
               </card>
             </div>
@@ -116,7 +122,8 @@
       <div class="py-3 text-center">
         <i class="ni ni-bell-55 ni-3x"></i>
         <h4 class="heading mt-4">Information</h4>
-        <p>This action will not affect the OTC Market contract. It will only remove it form your personal list of tracked markets.</p>
+        <p>This action will not affect the OTC Market contract. It will only remove it form your personal list of
+          tracked markets.</p>
       </div>
 
       <template slot="footer">
@@ -169,6 +176,7 @@ import {registerOtcMarket, reloadOtcMarketStore, unRegisterOtcMarket} from "@/ot
 import datetime from 'vuejs-datetimepicker';
 import moment from "moment";
 import BaseHeaderCustomColor from "@/components/BaseHeaderCustomColor";
+
 export default {
   components: {
     datetime,
@@ -202,15 +210,15 @@ export default {
     }
   },
   methods: {
-    initCloseMarket(market){
+    initCloseMarket(market) {
       this.marketToClose = market
       this.modals.modalCloseMarket = true
     },
-    cancelCloseMarket(){
+    cancelCloseMarket() {
       this.marketToClose = null
       this.modals.modalCloseMarket = false
     },
-    confirmCloseMarket(){
+    confirmCloseMarket() {
       this.loading = true
       const matchingMarket = this.smartContractManager.newMatchingMarketContract(this.marketToClose.address)
       const sender = window.ethereum.selectedAddress
@@ -233,7 +241,7 @@ export default {
       this.marketToClose = null
       this.loading = false
     },
-    timestampToDate(t){
+    timestampToDate(t) {
       const dateTime = new Date(t)
       return dateTime.toLocaleDateString() + " " + dateTime.toLocaleTimeString()
     },
@@ -247,7 +255,7 @@ export default {
         this.trackedMarkets.push(market)
       }
     },
-    goToTrading(){
+    goToTrading() {
       this.$router.push('otc-trading')
     },
     async trackNewOtc() {
