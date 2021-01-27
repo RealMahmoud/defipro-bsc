@@ -1,7 +1,25 @@
 {
-  "name": "bsc-dashboard",
-  "version": "1.0.0",
-  "author": "Abdelhamid Bakhta",
+  "name": "defi-pro-maker",
+  "version": "0.0.1",
+  "author": {
+    "name": "Abdelhamid Bakhta",
+    "email": "abdelhamid.bakhta@consensys.net",
+    "url": "https://abdelhamidbakhta.github.io/"
+  },
+  "keywords": [
+    "blockchain",
+    "defi",
+    "binance",
+    "hackathon",
+    "dex",
+    "smart contract",
+    "binance smart chain",
+    "evm"
+  ],
+  "bugs": {
+    "url": "https://github.com/thefutureisnow-hackathon/binance-meets-defi-dashboard/issues"
+  },
+  "homepage": "https://github.com/thefutureisnow-hackathon/binance-meets-defi-dashboard#readme",
   "scripts": {
     "format": "npx prettier --write src/**/*.vue && npx prettier --write src/**/*.js",
     "serve": "vue-cli-service serve --open",
