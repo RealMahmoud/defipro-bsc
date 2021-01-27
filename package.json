@@ -1,6 +1,6 @@
 {
   "name": "defipro-bsc",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": {
     "name": "Abdelhamid Bakhta",
     "email": "abdelhamid.bakhta@consensys.net",
@@ -17,9 +17,9 @@
     "evm"
   ],
   "bugs": {
-    "url": "https://github.com/thefutureisnow-hackathon/binance-meets-defi-dashboard/issues"
+    "url": "https://github.com/abdelhamidbakhta/defipro-bsc/issues"
   },
-  "homepage": "https://github.com/thefutureisnow-hackathon/binance-meets-defi-dashboard#readme",
+  "homepage": "https://github.com/abdelhamidbakhta/defipro-bsc#readme",
   "scripts": {
     "format": "npx prettier --write src/**/*.vue && npx prettier --write src/**/*.js",
     "serve": "vue-cli-service serve --open",
