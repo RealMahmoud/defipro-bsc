@@ -1,5 +1,5 @@
 # Binance Hackathon: The Future Is Now
-[![npm version](https://badge.fury.io/js/bsc-dashboard.svg?u)](https://www.npmjs.com/package/bsc-dashboard)
+[![npm version](https://badge.fury.io/js/defi-pro-maker.svg?u)](https://www.npmjs.com/package/defi-pro-maker)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
