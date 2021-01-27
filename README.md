@@ -30,9 +30,9 @@ npx oz compile
 npm run compile-contracts
 ```
 
-## Decentralized Exchange Web Application
+## 🌐 Decentralized Exchange Web Application
 
-### Install
+### 📦 Install
 
 ```
 npm config set '@bit:registry' https://node.bit.dev
