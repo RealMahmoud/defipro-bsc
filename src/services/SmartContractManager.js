@@ -1,5 +1,5 @@
-const erc20Artifacts = require("../../contracts/ERC20");
-const matchingMarketArtifacts = require("../../contracts/MatchingMarket");
+const erc20Artifacts = require("../../src/assets/contracts/ERC20");
+const matchingMarketArtifacts = require("../../src/assets/contracts/MatchingMarket");
 
 export default class SmartContractManager {
   constructor(web3) {

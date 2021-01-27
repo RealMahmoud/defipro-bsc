@@ -77,7 +77,7 @@ function initWeb3Environment(state) {
 }
 
 function initERC20() {
-  const erc20 = require("../contracts/ERC20");
+  const erc20 = require("../src/assets/contracts/ERC20");
   return {
     abi: erc20.abi,
     code: erc20.bytecode,
