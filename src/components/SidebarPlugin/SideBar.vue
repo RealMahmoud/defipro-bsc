@@ -129,7 +129,8 @@ export default {
   },
   methods: {
     openGettingStarted() {
-      this.$router.push("/quickstart");
+      //this.$router.push("/quickstart");
+      window.open('https://github.com/abdelhamidbakhta/defipro-bsc#readme')
     },
     closeSidebar() {
       this.$sidebar.displaySidebar(false);
