@@ -1,13 +1,14 @@
 # Binance Hackathon: The Future Is Now
-[![npm version](https://badge.fury.io/js/defi-pro-maker.svg?u)](https://www.npmjs.com/package/defi-pro-maker)
+[![npm version](https://badge.fury.io/js/defipro-bsc.svg?u)](https://www.npmjs.com/package/defipro-bsc)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-
+[![Twitter Follow](https://img.shields.io/twitter/follow/dimahledba)](https://twitter.com/dimahledba)
 ## 🔥 [Live Demo]() 🔥
 
 ## ⚙️ Setup
 
 ```
+npm config set '@bit:registry' https://node.bit.dev
 npm install
 ```
 
