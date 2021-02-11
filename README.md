@@ -4,7 +4,11 @@
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Twitter Follow](https://img.shields.io/twitter/follow/dimahledba)](https://twitter.com/dimahledba)
-## 🔥 [Live Demo](https://defibsc.surge.sh) 🔥
+## 🔥 [Live Demo](https://defibsc-hackathon.surge.sh/) 🔥
+
+The live demo works on [Binance Smart Chain testnet](https://testnet.bscscan.com/).
+
+Youtube video
 
 ## 🦄 Introduction
 
