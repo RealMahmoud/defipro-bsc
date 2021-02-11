@@ -8,7 +8,7 @@
 
 The live demo works on [Binance Smart Chain testnet](https://testnet.bscscan.com/).
 
-Youtube video
+[Youtube video.](https://www.youtube.com/watch?v=WhfY23jUhzw)
 
 ## 🦄 Introduction
 
