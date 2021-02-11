@@ -2,7 +2,7 @@ function getFromStorageOrDefault(name, defaultValue) {
   if (localStorage.getItem(name)) {
     return JSON.parse(localStorage.getItem(name));
   }
-  localStorage.setItem(name, defaultValue)
+  localStorage.setItem(name, JSON.stringify(defaultValue))
   return defaultValue;
 }
 
