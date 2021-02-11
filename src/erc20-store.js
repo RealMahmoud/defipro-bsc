@@ -2,14 +2,12 @@ import { STORAGE_KEYS } from "@/storage-keys";
 import { getFromStorageOrDefault, writeToStorage } from "@/storage";
 import { increaseERC20CreatedCount } from "@/analytics-store";
 
-const erc20Store = getFromStorageOrDefault(STORAGE_KEYS.erc20Instances, {
-  erc20TrackedTokens: []
-});
+const defaultErc20Tokens = {"erc20TrackedTokens":[{"name":"Fake PancakeSwap","symbol":"FAKE CAKE","address":"0x27D90300ABABaD8ffe349e2b8669Fcd662880787","supply":"10000000"},{"name":"Fake BakeryToken","symbol":"FAKE BAKE","address":"0x0271940724589D7d0858E4f866D5542390cE95A2","supply":"10000000"},{"name":"Fake Binance USD","symbol":"FAKE BUSD","address":"0x79fEE5009A12fca5dD11e3d0f4D21ff9eddFdA9D","supply":"10000000"},{"name":"Fake BNB","symbol":"FAKE BNB","address":"0xc43434565BB22C8e2A6a45d9B86dE0757A8b65aF","supply":"10000000"}]}
+
+const erc20Store = getFromStorageOrDefault(STORAGE_KEYS.erc20Instances, defaultErc20Tokens);
 
 function reloadStore() {
-  return getFromStorageOrDefault(STORAGE_KEYS.erc20Instances, {
-    erc20TrackedTokens: []
-  });
+  return getFromStorageOrDefault(STORAGE_KEYS.erc20Instances, defaultErc20Tokens);
 }
 
 /**

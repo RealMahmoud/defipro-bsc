@@ -85,18 +85,15 @@
         <ul class="navbar-nav">
           <slot name="links"> </slot>
         </ul>
-        <!--Divider-->
-        <hr class="my-3" />
-        <!--Heading-->
+        <!--hr class="my-3" />
         <h6 class="navbar-heading text-muted">Documentation</h6>
-        <!--Navigation-->
         <ul class="navbar-nav mb-md-3">
           <li class="nav-item">
             <a class="nav-link" @click="openGettingStarted">
               <i class="ni ni-spaceship"></i> Getting started
             </a>
           </li>
-        </ul>
+        </ul-->
       </div>
     </div>
   </nav>
